@@ -1,6 +1,6 @@
 # dotfiles
 
-Choose a self-explaining name for your project.
+This is a typical dotfiles folder for the various configurations that I do in my installations. This will include almost any special configs or ricing I do in any Linux installs but it will mainly focus on my Arch installs which utilize Hyprland, Kitty, Tmux, Zsh, and Neovim. 
 
 ## Usage
 ```shell
