@@ -5,6 +5,9 @@ This is a typical dotfiles folder for the various configurations that I do in my
 ## Usage
 ```shell
 git clone git@gitlab.com:thadigus/dotfiles.git
+cd dotfiles
+chmod +x ./create_symlinks.sh
+./create_symlinks.sh
 ```
 
 ## Support
