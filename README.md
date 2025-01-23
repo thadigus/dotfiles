@@ -4,7 +4,7 @@ This is a typical dotfiles folder for the various configurations that I do in my
 
 ## Simple Install (For Arch Machines Only)
 ```shell
-curl https://gitlab.com/thadigus/dotfiles/-/raw/main/arch_deploy_dotfiles.sh | bash
+curl https://gitlab.com/thadigus/dotfiles/-/raw/main/arch_deploy_dotfiles.sh > /dev/shm/arch_deploy_dotfiles.sh; bash /dev/shm/arch_deploy_dotfiles.sh; rm -f /dev/shm/arch_deploy_dotfiles.sh
 ```
 
 ## Usage
