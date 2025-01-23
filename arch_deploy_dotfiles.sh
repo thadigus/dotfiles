@@ -1,13 +1,23 @@
 #!/bin/bash
 
-# Required packages: zsh tmux kitty oh-my-zsh hyprland
+# Set the directory for the Git repo
+export DEV=$HOME/Development
+export YAY=$DEV/yay-git
+export DOT=$DEV/dotfiles
+
 # Install required packages (for Arch)
-yay -S git zsh tmux kitty oh-my-zsh hyprland stow
-# Make the dotfiles repo in the Development folder
-mkdir -p ~/Development/dotfiles
-# Clone the repo down
-git clone git@gitlab.com:thadigus/dotfiles.git ~/Development/dotfiles
-# Use GNU Stow to propegate the dotfiles
-export DOT=$HOME/Development/dotfiles
+sudo pacman -S --needed base-devel git bash
+# Install Yay AUR Helper
+mkdir -p $DOT
+git clone https://aur.archlinux.org/yay-git.git $YAY 
+cd $YAY
+makepkg -si
+# Clone Dotfiles repo
+mkdir -p $DOT
+git clone git@gitlab.com:thadigus/dotfiles.git $DOT
 cd $DOT
-update_dotfiles.sh
+# Use script to install OS packages with Yay
+./install_packages.sh
+# Implement Dotfiles with GNU Stow using Script
+./update_dotfiles.sh
+
