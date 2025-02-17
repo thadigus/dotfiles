@@ -1,7 +1,14 @@
 zsh
 kitty
+dolphin
+rofi
 fastfetch
 hypridle
 hyprland
 hyprlock
 hyprpaper
+hyprshot
+swaync
+waybar
+playerctl
+brightnessctl
