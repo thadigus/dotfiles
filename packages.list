@@ -12,7 +12,7 @@ swaync
 waybar
 playerctl
 brightnessctl
-librewolf
+librewolf-bin
 librewolf-firefox-shim
-librewolf-extension-bitwarden-git
-librewolf-extension-darkreader
+librewolf-extension-bitwarden-bin
+librewolf-extension-darkreader-bin
