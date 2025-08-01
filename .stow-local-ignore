@@ -5,20 +5,17 @@ CVS
 \.\#.+       # CVS conflict files / emacs lock files
 \.cvsignore
 
-\.svn
-_darcs
-\.hg
+
+\.DS_Store
 
 \.git
 \.gitignore
 \.gitmodules
-
-.+~          # emacs backup files
-\#.*\#       # emacs autosave files
 
 ^/README.*
 ^/LICENSE.*
 ^/COPYING
 
 # Custom Stuff
-*.sh
+\.sh$
+\.md$
