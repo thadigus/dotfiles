@@ -1,0 +1,109 @@
+# Ansible Pull Playbook for Deploying My Workstations
+#
+
+---
+
+- hosts: localhost
+  vars:
+    arch_pkgs:
+      - zsh
+      - kitty
+      - dolphin
+      - rofi
+      - fastfetch
+      - hypridle
+      - hyprland
+      - hyprlock
+      - hyprpaper
+      - hyprshot
+      - swaync
+      - waybar
+      - playerctl
+      - brightnessctl
+      - librewolf-bin
+      - librewolf-firefox-shim
+      - librewolf-extension-bitwarden-bin
+      - librewolf-extension-darkreader-bin
+    arch_stows:
+      - kitty
+      - zsh
+      - fastfetch
+      - hypridle
+      - hyprland
+      - hyprlock
+      - hyprpaper
+    macos_brews:
+      - python
+      - watch
+      - tmux
+      - zsh
+      - neovim
+      - fastfetch
+      - zsh-git-prompt
+      - stow
+    macos_casks:
+      - kitty
+      - vscodium
+      - powershell
+      - spotify
+    work_casks:
+      - visual-studio-code
+    macos_stows:
+      - kitty
+      - zsh
+      - fastfetch
+  tasks:
+    - name: Block - Arch Linux Configuration
+      block:
+        - name: Install Yay Pre-Reqs
+          package:
+            name:
+              - base-devel
+              - git
+            state: present
+        - name: Test for Yay Installed Already
+          shell: yay --version
+          ignore_errors: true
+          register: yay_present
+        - name: Install Yay /w Git and Bash
+          shell: cd /opt; git clone https://aur.archlinux.org/yay.git; cd yay; makespkg -si
+          become: yes
+          when: yay_present is failed
+        - name: Install OS Packages /w Yay
+          shell: yay -S "{{ item }}"
+          loop: arch_pkgs
+        - name: 
+      when: ansible_os_family == "Archlinux"
+    - name: Block - MacOS Configuration
+      block:
+        - name: Test for Brew Installed Already
+          shell: brew --version
+          ignore_errors: true
+          register: brew_present
+        - name: Install Brew
+          shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          when: brew_present is failed
+        - name: Clone Down Dotfiles Repo
+          git:
+            repo: git@github.com:/thadigus/dotfiles
+            dest: "{{ ansible_env.HOME }}/dotfiles"
+        - name: Upgrade Brew and Install All Packages
+          homebrew:
+            name: macos_brews
+            state: latest
+            update_brew: true
+        - name: Install and Upgrade all Casks
+          homebrew:
+            name: "{{ item }}"
+            state: latest
+          loop: 
+            - macos_casks
+            - work_casks
+        - name: Setup Stows /w Bash Script
+          shell: "/bin/bash -c '{{ ansible_env.HOME }}/dotfiles/scripts/macos_dotfiles.sh'"
+        - name: Setup Login Script to Keep Things Updated
+          cron:
+            name: "Update Dotfiles on Reboot"
+            special_time: reboot
+            job: "{{ ansible_env.HOME }}/dotfiles/scripts/macos_logon.sh"
+      when: ansible_os_family == "Darwin"
