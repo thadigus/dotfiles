@@ -71,8 +71,7 @@
           when: yay_present is failed
         - name: Install OS Packages /w Yay
           shell: yay -S "{{ item }}"
-          loop: arch_pkgs
-        - name: 
+          loop: "{{ arch_pkgs }}"
       when: ansible_os_family == "Archlinux"
     - name: Block - MacOS Configuration
       block:
@@ -89,16 +88,16 @@
             dest: "{{ ansible_env.HOME }}/dotfiles"
         - name: Upgrade Brew and Install All Packages
           homebrew:
-            name: macos_brews
+            name: "{{ macos_brews }}"
             state: latest
-            update_brew: true
+            update_homebrew: true
         - name: Install and Upgrade all Casks
           homebrew:
             name: "{{ item }}"
             state: latest
           loop: 
-            - macos_casks
-            - work_casks
+            - "{{ macos_casks }}"
+            - "{{ work_casks }}"
         - name: Setup Stows /w Bash Script
           shell: "/bin/bash -c '{{ ansible_env.HOME }}/dotfiles/scripts/macos_dotfiles.sh'"
         - name: Setup Login Script to Keep Things Updated
