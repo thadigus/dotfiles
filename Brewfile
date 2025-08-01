@@ -1,0 +1,21 @@
+# This is a simple Brewfile for all of the packages I like to keep for my MacOS installs
+
+# Brew Apps
+brew "python"
+brew "watch"
+brew "tmux"
+brew "zsh"
+brew "neovim"
+brew "fastfetch"
+brew "zsh-git-prompt"
+brew "stow"
+
+# Casks (GUI Apps)
+cask "kitty"
+cask "vscodium"
+cask "powershell"
+cask "spotify"
+
+# Stuff I'm forced to have for work...
+cask "visual-studio-code"
+
