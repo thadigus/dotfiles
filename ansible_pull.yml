@@ -46,6 +46,7 @@
       - vscodium
       - powershell
       - spotify
+      - claude
     work_casks:
       - visual-studio-code
     macos_stows:
@@ -86,6 +87,7 @@
           git:
             repo: git@github.com:/thadigus/dotfiles
             dest: "{{ ansible_env.HOME }}/dotfiles"
+          ignore_errors: true
         - name: Upgrade Brew and Install All Packages
           homebrew:
             name: "{{ macos_brews }}"
