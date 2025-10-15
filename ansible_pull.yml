@@ -70,9 +70,21 @@
           shell: cd /opt; git clone https://aur.archlinux.org/yay.git; cd yay; makespkg -si
           become: yes
           when: yay_present is failed
+        - name: Clone Down Dotfiles Repo
+          git:
+            repo: git@github.com:/thadigus/dotfiles
+            dest: "{{ ansible_env.HOME }}/dotfiles"
+          ignore_errors: true
         - name: Install OS Packages /w Yay
           shell: yay -S "{{ item }}"
           loop: "{{ arch_pkgs }}"
+        - name: Setup Stows /w Bash Script
+          shell: "/bin/bash -c '{{ ansible_env.HOME }}/dotfiles/scripts/arch_dotfiles.sh'"
+        - name: Setup Login Script to Keep Things Updated
+          cron:
+            name: "Update Dotfiles on Reboot"
+            special_time: reboot
+            job: "sudo -u {{ ansible_env.USER }} {{ ansible_env.HOME }}/dotfiles/scripts/arch_logon.sh"
       when: ansible_os_family == "Archlinux"
     - name: Block - MacOS Configuration
       block:
