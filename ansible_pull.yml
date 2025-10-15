@@ -72,7 +72,7 @@
           when: yay_present is failed
         - name: Clone Down Dotfiles Repo
           git:
-            repo: git@github.com:/thadigus/dotfiles
+            repo: https://github.com/thadigus/dotfiles.git
             dest: "{{ ansible_env.HOME }}/dotfiles"
           ignore_errors: true
         - name: Install OS Packages /w Yay
