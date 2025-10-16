@@ -47,9 +47,9 @@
       - powershell
       - spotify
       - claude
-      - postman
     work_casks:
       - visual-studio-code
+      - postman
     macos_stows:
       - kitty
       - zsh
