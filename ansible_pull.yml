@@ -75,10 +75,10 @@
             repo: https://github.com/thadigus/dotfiles.git
             dest: "{{ ansible_env.HOME }}/dotfiles"
           ignore_errors: true
-        - name: Install OS Packages /w Yay
-          shell: yay -S "{{ item }}"
-          loop: "{{ arch_pkgs }}"
-          become: yes
+        #- name: Install OS Packages /w Yay
+        #  shell: yay -S "{{ item }}"
+        #  loop: "{{ arch_pkgs }}"
+        #  become: yes
         - name: Setup Stows /w Bash Script
           shell: "/bin/bash -c '{{ ansible_env.HOME }}/dotfiles/scripts/arch_dotfiles.sh'"
         - name: Setup Login Script to Keep Things Updated
