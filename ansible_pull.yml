@@ -50,6 +50,7 @@
     work_casks:
       - visual-studio-code
       - postman
+      - 1password
     macos_stows:
       - kitty
       - zsh

@@ -19,4 +19,4 @@ cask "spotify"
 # Stuff I'm forced to have for work...
 cask "visual-studio-code"
 cask "postman"
-
+cask "1password"
