@@ -51,6 +51,7 @@
       - visual-studio-code
       - postman
       - 1password
+      - logi-options+
     macos_stows:
       - kitty
       - zsh
