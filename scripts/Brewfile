@@ -15,6 +15,7 @@ cask "kitty"
 cask "vscodium"
 cask "powershell"
 cask "spotify"
+cask "wifiman"
 
 # Stuff I'm forced to have for work...
 cask "visual-studio-code"
