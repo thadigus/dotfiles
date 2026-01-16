@@ -16,6 +16,7 @@ cask "vscodium"
 cask "powershell"
 cask "spotify"
 cask "wifiman"
+cask "ultimaker-cura"
 
 # Stuff I'm forced to have for work...
 cask "visual-studio-code"
