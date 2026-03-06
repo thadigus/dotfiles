@@ -10,19 +10,12 @@
   vars:
     dotfiles_dir: "{{ ansible_facts['env']['HOME'] }}/dotfiles"
   tasks:
-    - name: Ensure git is present
-      become: true
-      package:
-        name: git
-        state: present
-
-    - name: Clone dotfiles repo to home
-      git:
-        repo: https://github.com/thadigus/dotfiles.git
-        dest: "{{ dotfiles_dir }}"
-        update: true
-
-    # ── Arch Linux ──────────────────────────────────────────────
+    # This MUST be the first task. On a fresh Arch install, the user only
+    # has password-based sudo (%wheel ALL=(ALL:ALL) ALL). With
+    # become_ask_pass=False in ansible.cfg, every subsequent become:true
+    # task will fail without this NOPASSWD override in place.
+    # On first run, pass -K so Ansible can prompt for the sudo password
+    # needed to create this file. On subsequent runs it's a no-op.
     - name: Arch - Enable passwordless sudo for provisioning
       become: true
       copy:
@@ -32,6 +25,13 @@
         validate: "visudo -cf %s"
       when: ansible_facts['os_family'] == "Archlinux"
 
+    - name: Clone dotfiles repo to home
+      git:
+        repo: https://github.com/thadigus/dotfiles.git
+        dest: "{{ dotfiles_dir }}"
+        update: true
+
+    # ── Arch Linux ──────────────────────────────────────────────
     - name: Arch - Ensure base-devel and git are present
       become: true
       package:
