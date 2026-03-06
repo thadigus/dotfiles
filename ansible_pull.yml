@@ -1,47 +1,129 @@
 # Ansible Pull Playbook for Deploying My Workstations
 #
+# First run (fresh install): ansible-pull -K -U https://github.com/thadigus/dotfiles ansible_pull.yml
+# Subsequent runs:           ansible-pull -U https://github.com/thadigus/dotfiles ansible_pull.yml
 
 ---
 
 - hosts: localhost
   connection: local
+  vars:
+    dotfiles_dir: "{{ ansible_facts['env']['HOME'] }}/dotfiles"
   tasks:
-    - name: Block - Arch Linux Configuration
-      block:
-        - name: Ensure git is present for local clone
-          become: true
-          package:
-            name:
-              - git
-            state: present
+    - name: Ensure git is present
+      become: true
+      package:
+        name: git
+        state: present
 
-        - name: Clone dotfiles repo to home
-          git:
-            repo: https://github.com/thadigus/dotfiles.git
-            dest: "{{ ansible_facts['env']['HOME'] }}/dotfiles"
-            update: true
+    - name: Clone dotfiles repo to home
+      git:
+        repo: https://github.com/thadigus/dotfiles.git
+        dest: "{{ dotfiles_dir }}"
+        update: true
 
-        - name: Run split Arch playbook from local clone
-          shell: >
-            ansible-playbook -i localhost, -c local
-            "{{ ansible_facts['env']['HOME'] }}/dotfiles/ansible/arch_site.yml"
+    # ── Arch Linux ──────────────────────────────────────────────
+    - name: Arch - Enable passwordless sudo for provisioning
+      become: true
+      copy:
+        dest: /etc/sudoers.d/99-ansible-provision
+        content: "%wheel ALL=(ALL:ALL) NOPASSWD: ALL\n"
+        mode: "0440"
+        validate: "visudo -cf %s"
       when: ansible_facts['os_family'] == "Archlinux"
-    - name: Block - MacOS Configuration
-      block:
-        - name: Ensure git is present for local clone
-          package:
-            name:
-              - git
-            state: present
 
-        - name: Clone dotfiles repo to home
-          git:
-            repo: https://github.com/thadigus/dotfiles.git
-            dest: "{{ ansible_facts['env']['HOME'] }}/dotfiles"
-            update: true
+    - name: Arch - Ensure base-devel and git are present
+      become: true
+      package:
+        name:
+          - base-devel
+          - git
+        state: present
+      when: ansible_facts['os_family'] == "Archlinux"
 
-        - name: Run split MacOS playbook from local clone
-          shell: >
-            ansible-playbook -i localhost, -c local
-            "{{ ansible_facts['env']['HOME'] }}/dotfiles/ansible/macos_site.yml"
+    - name: Arch - Build and install yay-bin when missing
+      become: false
+      shell: |
+        set -euo pipefail
+        [[ -x /usr/bin/yay ]] && exit 0
+        build_dir="$HOME/.cache/yay-bin"
+        rm -rf "$build_dir"
+        mkdir -p "$build_dir"
+        git clone https://aur.archlinux.org/yay-bin.git "$build_dir"
+        cd "$build_dir"
+        makepkg --syncdeps --install --noconfirm --needed
+      args:
+        executable: /bin/bash
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Arch - Read package list
+      slurp:
+        src: "{{ dotfiles_dir }}/scripts/arch_packages.list"
+      register: arch_packages_file
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Arch - Install packages via yay
+      become: false
+      shell: |
+        set -euo pipefail
+        /usr/bin/yay -S --noconfirm --needed {{ (arch_packages_file.content | b64decode).splitlines()
+          | map('trim') | reject('match', '^$') | reject('match', '^#') | join(' ') }}
+      args:
+        executable: /bin/bash
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Arch - Ensure cronie is enabled
+      become: true
+      service:
+        name: cronie
+        state: started
+        enabled: true
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Arch - Apply dotfiles via stow
+      shell: "{{ dotfiles_dir }}/scripts/arch_dotfiles.sh"
+      args:
+        executable: /bin/bash
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Arch - Ensure update-on-reboot cron exists
+      cron:
+        name: Update Dotfiles on Reboot
+        special_time: reboot
+        job: "{{ dotfiles_dir }}/scripts/arch_logon.sh"
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Arch - Remove provisioning sudo override
+      become: true
+      file:
+        path: /etc/sudoers.d/99-ansible-provision
+        state: absent
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    # ── macOS ───────────────────────────────────────────────────
+    - name: macOS - Ensure Homebrew is installed
+      shell: |
+        set -euo pipefail
+        command -v brew >/dev/null 2>&1 || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      args:
+        executable: /bin/bash
+      when: ansible_facts['os_family'] == "Darwin"
+
+    - name: macOS - Install packages from Brewfile
+      shell: brew bundle --file "{{ dotfiles_dir }}/scripts/Brewfile"
+      args:
+        executable: /bin/bash
+      when: ansible_facts['os_family'] == "Darwin"
+
+    - name: macOS - Apply dotfiles via stow
+      shell: "{{ dotfiles_dir }}/scripts/macos_dotfiles.sh"
+      args:
+        executable: /bin/bash
+      when: ansible_facts['os_family'] == "Darwin"
+
+    - name: macOS - Ensure update-on-reboot cron exists
+      cron:
+        name: Update Dotfiles on Reboot
+        special_time: reboot
+        job: "{{ dotfiles_dir }}/scripts/macos_logon.sh"
       when: ansible_facts['os_family'] == "Darwin"

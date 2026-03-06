@@ -1,3 +1,0 @@
-# Minimal package prerequisites required to bootstrap AUR helper installation.
-base-devel
-git
