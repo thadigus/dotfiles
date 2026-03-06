@@ -30,6 +30,14 @@ need_cmd() {
   command -v "$1" >/dev/null 2>&1 || err "Missing required command: $1"
 }
 
+prompt_input() {
+  local prompt="$1"
+  local value
+  [[ -r /dev/tty ]] || err "No interactive TTY available for prompts."
+  read -r -p "$prompt" value </dev/tty || err "Failed to read user input."
+  printf '%s' "$value"
+}
+
 choose_raid_mode() {
   cat <<'TXT'
 Configure RAID1?
@@ -37,7 +45,7 @@ Note: RAID enabled uses two matching disks. RAID disabled uses one selected disk
 1) yes (RAID1)
 2) no (single disk)
 TXT
-  read -r -p "Enable RAID [1-2]: " choice
+  choice="$(prompt_input "Enable RAID [1-2]: ")"
   case "$choice" in
     1) printf 'raid' ;;
     2) printf 'single' ;;
@@ -73,7 +81,7 @@ find_raid_pair() {
 select_single_disk() {
   info "Available disks:"
   list_disks
-  read -r -p "Enter target disk (example: /dev/nvme0n1): " disk
+  disk="$(prompt_input "Enter target disk (example: /dev/nvme0n1): ")"
   [[ -b "$disk" ]] || err "Invalid disk: $disk"
   printf '%s' "$disk"
 }
@@ -317,7 +325,7 @@ main() {
     disk_b="/dev/$disk_b"
 
     info "Using disks for RAID1: $disk_a and $disk_b"
-    read -r -p "Continue with these disks? [y/N]: " raid_confirm
+    raid_confirm="$(prompt_input "Continue with these disks? [y/N]: ")"
     [[ "$raid_confirm" =~ ^[Yy]$ ]] || err "RAID setup canceled."
 
     partition_raid_members "$disk_a" "$disk_b"
