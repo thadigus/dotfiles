@@ -1,11 +1,4 @@
 #!/bin/bash
+set -euo pipefail
 
-cd $HOME/dotfiles
-git pull
-
-brew update
-brew upgrade
-
-cd $HOME/dotfiles/scripts
-brew bundle
-
+ansible-pull -U https://github.com/thadigus/dotfiles.git ansible_pull.yml

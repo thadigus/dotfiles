@@ -1,5 +1,4 @@
 #!/bin/bash
+set -euo pipefail
 
-cd $HOME/dotfiles
-git pull
-
+ansible-pull -U https://github.com/thadigus/dotfiles.git ansible_pull.yml
