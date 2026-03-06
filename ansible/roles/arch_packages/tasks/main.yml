@@ -50,9 +50,11 @@
     if [[ -x /usr/bin/yay ]]; then
       exit 0
     fi
-    rm -rf /tmp/yay-bin
-    git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
-    cd /tmp/yay-bin
+    build_dir="$HOME/.cache/yay-bin"
+    rm -rf "$build_dir"
+    mkdir -p "$(dirname "$build_dir")"
+    git clone https://aur.archlinux.org/yay-bin.git "$build_dir"
+    cd "$build_dir"
     makepkg -si --noconfirm --needed
   args:
     executable: /bin/bash
