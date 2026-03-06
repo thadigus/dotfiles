@@ -35,6 +35,7 @@ prompt_input() {
   local value
   [[ -r /dev/tty ]] || err "No interactive TTY available for prompts."
   read -r -p "$prompt" value </dev/tty || err "Failed to read user input."
+  value="${value%$'\r'}"
   printf '%s' "$value"
 }
 
