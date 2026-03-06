@@ -39,7 +39,7 @@ prompt_input() {
 }
 
 choose_raid_mode() {
-  cat <<'TXT'
+  cat >/dev/tty <<'TXT'
 Configure RAID1?
 Note: RAID enabled uses two matching disks. RAID disabled uses one selected disk.
 1) yes (RAID1)
@@ -79,8 +79,8 @@ find_raid_pair() {
 }
 
 select_single_disk() {
-  info "Available disks:"
-  list_disks
+  printf '\n==> Available disks:\n' >/dev/tty
+  list_disks >/dev/tty
   disk="$(prompt_input "Enter target disk (example: /dev/nvme0n1): ")"
   [[ -b "$disk" ]] || err "Invalid disk: $disk"
   printf '%s' "$disk"
