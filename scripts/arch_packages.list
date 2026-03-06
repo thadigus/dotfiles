@@ -1,4 +1,15 @@
+# Desktop and tooling packages installed after base bootstrap.
+# Keep this list to official Arch repo packages for pacstrap compatibility.
+
+bash-completion
+base-devel
+man-db
+man-pages
+openssh
+stow
+tmux
 zsh
+
 kitty
 dolphin
 rofi
@@ -7,12 +18,22 @@ hypridle
 hyprland
 hyprlock
 hyprpaper
-hyprshot
+wayland
+xorg-xwayland
+qt5-wayland
+qt6-wayland
+xdg-desktop-portal
 swaync
 waybar
+wl-clipboard
+xdg-desktop-portal-hyprland
+pipewire
+wireplumber
+polkit
+network-manager-applet
+grim
+slurp
+
 playerctl
 brightnessctl
-librewolf-bin
-librewolf-firefox-shim
-librewolf-extension-bitwarden-bin
-librewolf-extension-darkreader-bin
+proton-vpn-gtk-app

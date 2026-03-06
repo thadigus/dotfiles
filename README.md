@@ -10,6 +10,12 @@ I've created an Ansible Pull playbook to deploy this repo on Arch boxes and MacO
 ansible-pull -U https://github.com/thadigus/dotfiles ansible_pull.yml
 ```
 
+## Arch Install Script (Testing)
+
+```shell
+curl -fsSL https://raw.githubusercontent.com/thadigus/dotfiles/main/scripts/arch_install.sh | bash
+```
+
 ## Support
 Any support/questions or ideas can be addressed on the [Issues Page](https://gitlab.com/thadigus/dotfiles/-/issues).
 
@@ -19,4 +25,3 @@ This is mainly a repo for my personal configuration tracking and some examples I
 ## Authors and acknowledgment
 
 ### [Thad Turner](https://turnerservices.cloud/) - Cybersecurity Practitioner
-
