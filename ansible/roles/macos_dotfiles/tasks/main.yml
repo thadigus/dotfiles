@@ -1,0 +1,15 @@
+---
+- name: Ensure dotfiles repo is present
+  git:
+    repo: https://github.com/thadigus/dotfiles.git
+    dest: "{{ dotfiles_dir }}"
+    update: true
+
+- name: Apply GNU stow dotfiles script
+  shell: "/bin/bash -c '{{ dotfiles_dir }}/scripts/macos_dotfiles.sh'"
+
+- name: Ensure dotfiles update-on-reboot cron exists
+  cron:
+    name: Update Dotfiles on Reboot
+    special_time: reboot
+    job: "sudo -u {{ ansible_env.USER }} {{ dotfiles_dir }}/scripts/macos_logon.sh"

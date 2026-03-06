@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    dotfiles_dir: "{{ ansible_env.HOME }}/dotfiles"
+  roles:
+    - macos_packages
+    - macos_dotfiles

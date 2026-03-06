@@ -1,5 +1,4 @@
-# Desktop and tooling packages installed after base bootstrap.
-# Keep this list to official Arch repo packages for pacstrap compatibility.
+# Desktop and tooling packages for post-install Ansible provisioning.
 
 bash-completion
 base-devel
@@ -36,4 +35,7 @@ slurp
 
 playerctl
 brightnessctl
+zen-browser-bin
+proton-mail-bin
+proton-pass-bin
 proton-vpn-gtk-app

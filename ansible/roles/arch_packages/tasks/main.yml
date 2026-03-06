@@ -1,0 +1,96 @@
+---
+- name: Read Arch bootstrap package list from dotfiles repo
+  slurp:
+    src: "{{ dotfiles_dir }}/scripts/arch_bootstrap_packages.list"
+  register: arch_bootstrap_packages_file
+
+- name: Build bootstrap package list from file
+  set_fact:
+    arch_bootstrap_package_list: >-
+      {{
+        (arch_bootstrap_packages_file.content | b64decode).splitlines()
+        | map('trim')
+        | reject('match', '^$')
+        | reject('match', '^#')
+        | list
+      }}
+
+- name: Ensure bootstrap packages are present
+  become: true
+  package:
+    name: "{{ arch_bootstrap_package_list }}"
+    state: present
+  when: arch_bootstrap_package_list | length > 0
+
+- name: Read Arch package list from dotfiles repo
+  slurp:
+    src: "{{ dotfiles_dir }}/scripts/arch_packages.list"
+  register: arch_packages_file
+
+- name: Build package list from file
+  set_fact:
+    arch_package_list: >-
+      {{
+        (arch_packages_file.content | b64decode).splitlines()
+        | map('trim')
+        | reject('match', '^$')
+        | reject('match', '^#')
+        | list
+      }}
+
+- name: Check whether yay is installed
+  command: yay --version
+  register: yay_present
+  ignore_errors: true
+  changed_when: false
+
+- name: Build and install yay-bin from AUR when missing
+  when: yay_present is failed
+  block:
+    - name: Remove any old yay-bin build directory
+      file:
+        path: /tmp/yay-bin
+        state: absent
+
+    - name: Clone yay-bin AUR repo
+      become: false
+      git:
+        repo: https://aur.archlinux.org/yay-bin.git
+        dest: /tmp/yay-bin
+
+    - name: Build yay-bin package
+      become: false
+      command: makepkg --noconfirm
+      args:
+        chdir: /tmp/yay-bin
+
+    - name: Install built yay-bin package
+      become: true
+      shell: |
+        set -euo pipefail
+        pkg_file="$(ls -1 /tmp/yay-bin/*.pkg.tar.* | head -n 1)"
+        pacman -U --noconfirm --needed "$pkg_file"
+      args:
+        executable: /bin/bash
+
+- name: Temporarily allow passwordless sudo for wheel during yay install
+  become: true
+  copy:
+    dest: /etc/sudoers.d/99-ansible-yay
+    content: "%wheel ALL=(ALL:ALL) NOPASSWD: ALL\n"
+    mode: "0440"
+
+- name: Install Arch packages from list via yay
+  become: false
+  shell: |
+    set -euo pipefail
+    yay -S --noconfirm --needed {{ arch_package_list | join(' ') }}
+  args:
+    executable: /bin/bash
+  when: arch_package_list | length > 0
+
+- name: Remove temporary passwordless sudo override
+  become: true
+  file:
+    path: /etc/sudoers.d/99-ansible-yay
+    state: absent
