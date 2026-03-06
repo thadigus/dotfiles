@@ -17,7 +17,7 @@ USER_PASSWORD=""
 BASE_PKGS=(
   base linux linux-firmware
   grub efibootmgr
-  networkmanager sudo ansible
+  networkmanager sudo ansible git
   lvm2 cryptsetup mdadm
   dosfstools e2fsprogs util-linux
   sbctl

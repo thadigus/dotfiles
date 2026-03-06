@@ -3,7 +3,8 @@
 
 ---
 
-- hosts: localhost
+- hosts: all
+  connection: local
   tasks:
     - name: Block - Arch Linux Configuration
       block:
