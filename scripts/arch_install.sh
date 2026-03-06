@@ -163,8 +163,8 @@ setup_luks_lvm() {
   mkfs.fat -F32 "$efi_part"
 
   info "Creating LUKS container: $crypt_part"
-  cryptsetup luksFormat "$crypt_part"
-  cryptsetup open "$crypt_part" "$CRYPT_NAME"
+  cryptsetup luksFormat "$crypt_part" </dev/tty >/dev/tty
+  cryptsetup open "$crypt_part" "$CRYPT_NAME" </dev/tty >/dev/tty
 
   info "Creating LVM on /dev/mapper/$CRYPT_NAME"
   pvcreate "/dev/mapper/$CRYPT_NAME"
