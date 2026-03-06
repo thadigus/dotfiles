@@ -12,4 +12,4 @@
   cron:
     name: Update Dotfiles on Reboot
     special_time: reboot
-    job: "sudo -u {{ ansible_env.USER }} {{ dotfiles_dir }}/scripts/macos_logon.sh"
+    job: "sudo -u {{ ansible_facts['env']['USER'] }} {{ dotfiles_dir }}/scripts/macos_logon.sh"

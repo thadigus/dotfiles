@@ -18,14 +18,14 @@
         - name: Clone dotfiles repo to home
           git:
             repo: https://github.com/thadigus/dotfiles.git
-            dest: "{{ ansible_env.HOME }}/dotfiles"
+            dest: "{{ ansible_facts['env']['HOME'] }}/dotfiles"
             update: true
 
         - name: Run split Arch playbook from local clone
           shell: >
             ansible-playbook -i localhost, -c local
-            "{{ ansible_env.HOME }}/dotfiles/ansible/arch_site.yml"
-      when: ansible_os_family == "Archlinux"
+            "{{ ansible_facts['env']['HOME'] }}/dotfiles/ansible/arch_site.yml"
+      when: ansible_facts['os_family'] == "Archlinux"
     - name: Block - MacOS Configuration
       block:
         - name: Ensure git is present for local clone
@@ -37,11 +37,11 @@
         - name: Clone dotfiles repo to home
           git:
             repo: https://github.com/thadigus/dotfiles.git
-            dest: "{{ ansible_env.HOME }}/dotfiles"
+            dest: "{{ ansible_facts['env']['HOME'] }}/dotfiles"
             update: true
 
         - name: Run split MacOS playbook from local clone
           shell: >
             ansible-playbook -i localhost, -c local
-            "{{ ansible_env.HOME }}/dotfiles/ansible/macos_site.yml"
-      when: ansible_os_family == "Darwin"
+            "{{ ansible_facts['env']['HOME'] }}/dotfiles/ansible/macos_site.yml"
+      when: ansible_facts['os_family'] == "Darwin"
