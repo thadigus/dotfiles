@@ -44,7 +44,7 @@
     content: "%wheel ALL=(ALL:ALL) NOPASSWD: ALL\n"
     mode: "0440"
 
-- name: Bootstrap yay-bin when missing
+- name: Build yay-bin package when missing
   shell: |
     set -euo pipefail
     if [[ -x /usr/bin/yay ]]; then
@@ -55,7 +55,19 @@
     mkdir -p "$(dirname "$build_dir")"
     git clone https://aur.archlinux.org/yay-bin.git "$build_dir"
     cd "$build_dir"
-    makepkg -si --noconfirm --needed
+    makepkg --syncdeps --noconfirm --needed
+  args:
+    executable: /bin/bash
+
+- name: Install built yay-bin package when missing
+  become: true
+  shell: |
+    set -euo pipefail
+    if [[ -x /usr/bin/yay ]]; then
+      exit 0
+    fi
+    pkg_file="$(ls -1 "{{ ansible_facts['env']['HOME'] }}/.cache/yay-bin"/yay-bin-*.pkg.tar.* | head -n 1)"
+    pacman -U --noconfirm --needed "$pkg_file"
   args:
     executable: /bin/bash
 
