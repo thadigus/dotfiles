@@ -30,13 +30,42 @@ need_cmd() {
   command -v "$1" >/dev/null 2>&1 || err "Missing required command: $1"
 }
 
+prepare_tty() {
+  # Some environments send CR without LF when piping script into bash.
+  stty -F /dev/tty sane icrnl echo icanon 2>/dev/null \
+    || stty sane icrnl echo icanon </dev/tty >/dev/tty 2>/dev/null \
+    || true
+}
+
 prompt_input() {
   local prompt="$1"
   local value
   [[ -r /dev/tty ]] || err "No interactive TTY available for prompts."
-  read -r -p "$prompt" value </dev/tty || err "Failed to read user input."
-  value="${value%$'\r'}"
+  prepare_tty
+  printf '%s' "$prompt" >/dev/tty
+  IFS= read -r value </dev/tty || err "Failed to read user input."
+  value="$(printf '%s' "$value" | tr -d '\r')"
   printf '%s' "$value"
+}
+
+prompt_choice() {
+  local prompt="$1"
+  local valid="$2"
+  local key
+  [[ -r /dev/tty ]] || err "No interactive TTY available for prompts."
+  prepare_tty
+  while true; do
+    printf '%s' "$prompt" >/dev/tty
+    IFS= read -r -n 1 key </dev/tty || err "Failed to read user input."
+    printf '\n' >/dev/tty
+    key="$(printf '%s' "$key" | tr -d '\r[:space:]')"
+    [[ -n "$key" ]] || continue
+    if [[ "$valid" == *"$key"* ]]; then
+      printf '%s' "$key"
+      return
+    fi
+    printf 'Invalid selection.\n' >/dev/tty
+  done
 }
 
 choose_raid_mode() {
@@ -46,7 +75,7 @@ Note: RAID enabled uses two matching disks. RAID disabled uses one selected disk
 1) yes (RAID1)
 2) no (single disk)
 TXT
-  choice="$(prompt_input "Enable RAID [1-2]: ")"
+  choice="$(prompt_choice "Enable RAID [1-2]: " "12")"
   case "$choice" in
     1) printf 'raid' ;;
     2) printf 'single' ;;
@@ -326,7 +355,7 @@ main() {
     disk_b="/dev/$disk_b"
 
     info "Using disks for RAID1: $disk_a and $disk_b"
-    raid_confirm="$(prompt_input "Continue with these disks? [y/N]: ")"
+    raid_confirm="$(prompt_choice "Continue with these disks? [y/N]: " "yYnN")"
     [[ "$raid_confirm" =~ ^[Yy]$ ]] || err "RAID setup canceled."
 
     partition_raid_members "$disk_a" "$disk_b"
