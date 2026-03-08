@@ -120,10 +120,3 @@
       args:
         executable: /bin/bash
       when: ansible_facts['os_family'] == "Darwin"
-
-    - name: macOS - Ensure update-on-reboot cron exists
-      cron:
-        name: Update Dotfiles on Reboot
-        special_time: reboot
-        job: "{{ dotfiles_dir }}/scripts/macos_logon.sh"
-      when: ansible_facts['os_family'] == "Darwin"
