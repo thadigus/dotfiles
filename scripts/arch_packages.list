@@ -1,6 +1,5 @@
 # Desktop and tooling packages for post-install Ansible provisioning.
 
-bash-completion
 base-devel
 cronie
 man-db
@@ -9,6 +8,7 @@ openssh
 stow
 tmux
 zsh
+oh-my-zsh-git
 
 kitty
 dolphin
@@ -20,8 +20,6 @@ hyprlock
 hyprpaper
 wayland
 xorg-xwayland
-qt5-wayland
-qt6-wayland
 xdg-desktop-portal
 swaync
 waybar
