@@ -27,7 +27,7 @@
 
     - name: Clone dotfiles repo to home
       git:
-        repo: git@github.com:thadigus/dotfiles
+        repo: git@github.com:thadigus/dotfiles.git
         dest: "{{ dotfiles_dir }}"
         update: true
 
