@@ -117,7 +117,7 @@
 
     - name: Setup oh-my-zsh directory
       file:
-        src: {{ ansible_facts['env']['HOME'] }}/.oh-my-zsh/
+        src: "{{ ansible_facts['env']['HOME'] }}/.oh-my-zsh/"
         dest: /usr/share/oh-my-zsh
         state: link 
       when: ansible_facts['os_family'] == "Darwin"
