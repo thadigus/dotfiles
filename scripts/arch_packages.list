@@ -1,37 +1,37 @@
 # Desktop and tooling packages for post-install Ansible provisioning.
 
+# Base and Desktop Environment
 base-devel
+git
+wayland
+wayland-protocols
+wlroots_0_19
+wmenu
+wl-clipboard
+grim
+slurp
+swaybg
+ttf-jetbrains-mono-nerd
+xorg-xwayland
+pipewire
+polkit
+
+# OS Utilities
 cronie
 man-db
 man-pages
 openssh
 stow
+network-manager-applet
+dolphin
+rofi
+
+# Personal Utilities
+kitty
 tmux
 zsh
 oh-my-zsh-git
-
-kitty
-dolphin
-rofi
 fastfetch
-hypridle
-hyprland
-hyprlock
-hyprpaper
-wayland
-xorg-xwayland
-xdg-desktop-portal
-swaync
-waybar
-wl-clipboard
-xdg-desktop-portal-hyprland
-pipewire
-wireplumber
-polkit
-network-manager-applet
-grim
-slurp
-
 playerctl
 brightnessctl
 zen-browser-bin
