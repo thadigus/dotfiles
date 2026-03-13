@@ -2,7 +2,11 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/usr/share/oh-my-zsh"
+if [[ -f "/usr/share/oh-my-zsh" ]]; then
+  export ZSH="/usr/share/oh-my-zsh"
+else
+  export ZSH="$HOME/.oh-my-zsh"
+fi
 
 ZSH_THEME="norm"
 

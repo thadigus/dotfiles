@@ -115,13 +115,6 @@
         executable: /bin/bash
       when: ansible_facts['os_family'] == "Darwin"
 
-    - name: Setup oh-my-zsh directory
-      file:
-        src: "{{ ansible_facts['env']['HOME'] }}/.oh-my-zsh/"
-        dest: /usr/share/oh-my-zsh
-        state: link 
-      when: ansible_facts['os_family'] == "Darwin"
-
     - name: macOS - Apply dotfiles via stow
       shell: "{{ dotfiles_dir }}/scripts/macos_dotfiles.sh"
       args:
