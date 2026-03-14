@@ -8,7 +8,8 @@
 - hosts: localhost
   connection: local
   vars:
-    dotfiles_dir: "{{ ansible_facts['env']['HOME'] }}/dotfiles"
+    user_home: "{{ ansible_facts['env']['HOME'] }}"
+    dotfiles_dir: "{{ user_home }}/dotfiles"
   tasks:
     # This MUST be the first task. On a fresh Arch install, the user only
     # has password-based sudo (%wheel ALL=(ALL:ALL) ALL). With
@@ -80,11 +81,21 @@
         enabled: true
       when: ansible_facts['os_family'] == "Archlinux"
 
+    - name: "Clone latest DWL to {{ ansible_facts['env']['HOME'] }}"
+      shell: git clone https://codeberg.org/dwl/dwl.git "{{ user_home }}/dwl"
+
+
     - name: Arch - Apply dotfiles via stow
       shell: "{{ dotfiles_dir }}/scripts/arch_dotfiles.sh"
       args:
         executable: /bin/bash
       when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Build DWL
+      become: true
+      shell: |
+        cd "{{ user_home }}/dwl"
+        make clean install
 
     - name: Arch - Ensure update-on-reboot cron exists
       cron:

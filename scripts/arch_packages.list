@@ -5,7 +5,7 @@ base-devel
 git
 wayland
 wayland-protocols
-wlroots_0_19
+wlroots0.19
 wmenu
 wl-clipboard
 grim
@@ -25,6 +25,7 @@ stow
 network-manager-applet
 dolphin
 rofi
+neovim
 
 # Personal Utilities
 kitty
