@@ -84,7 +84,7 @@
     - name: "Clone latest DWL to {{ ansible_facts['env']['HOME'] }}"
       git:
         repo: https://codeberg.org/dwl/dwl.git
-        dest: "{{ dotfiles_dir }}"
+        dest: "{{ user_home }}/dwl"
         update: true
       when: ansible_facts['os_family'] == "Archlinux"
 
