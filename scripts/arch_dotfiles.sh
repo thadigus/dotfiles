@@ -2,5 +2,5 @@
 set -euo pipefail
 
 cd "$HOME/dotfiles"
-stow --adopt hypridle hyprland hyprlock hyprpaper kitty fastfetch zsh
+stow --adopt kitty fastfetch zsh
 git restore .
