@@ -101,18 +101,18 @@
         make clean install
       when: ansible_facts['os_family'] == "Archlinux"
 
+    - name: Set Shell to Zsh
+      become: yes
+      user:
+        name: thadigus
+        shell: /bin/zsh
+      when: ansible_facts['os_family'] == "Archlinux"
+
     - name: Arch - Ensure update-on-reboot cron exists
       cron:
         name: Update Dotfiles on Reboot
         special_time: reboot
         job: "{{ dotfiles_dir }}/scripts/arch_logon.sh"
-      when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: Arch - Remove provisioning sudo override
-      become: true
-      file:
-        path: /etc/sudoers.d/99-ansible-provision
-        state: absent
       when: ansible_facts['os_family'] == "Archlinux"
 
     # ── macOS ───────────────────────────────────────────────────
