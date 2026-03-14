@@ -11,21 +11,6 @@
     user_home: "{{ ansible_facts['env']['HOME'] }}"
     dotfiles_dir: "{{ user_home }}/dotfiles"
   tasks:
-    # This MUST be the first task. On a fresh Arch install, the user only
-    # has password-based sudo (%wheel ALL=(ALL:ALL) ALL). With
-    # become_ask_pass=False in ansible.cfg, every subsequent become:true
-    # task will fail without this NOPASSWD override in place.
-    # On first run, pass -K so Ansible can prompt for the sudo password
-    # needed to create this file. On subsequent runs it's a no-op.
-    - name: Arch - Enable passwordless sudo for provisioning
-      become: true
-      copy:
-        dest: /etc/sudoers.d/99-ansible-provision
-        content: "%wheel ALL=(ALL:ALL) NOPASSWD: ALL\n"
-        mode: "0440"
-        validate: "visudo -cf %s"
-      when: ansible_facts['os_family'] == "Archlinux"
-
     - name: Clone dotfiles repo to home
       git:
         repo: git@github.com:thadigus/dotfiles.git
