@@ -87,20 +87,21 @@
       when: ansible_facts['os_family'] == "Archlinux"
 
     - name: Create greeter User
+      become: true
       user:
         name: greeter
         comment: Greetd Greeter User
       when: ansible_facts['os_family'] == "Archlinux"
 
     - name: Create greetd config directory
-      become: yes
+      become: true
       file:
         path: /etc/greetd/
         state: directory
       when: ansible_facts['os_family'] == "Archlinux"
 
     - name: Set tuigreet in greetd config
-      become: yes
+      become: true
       shell: |
         echo '[terminal]
         vt = 1
@@ -112,6 +113,7 @@
       when: ansible_facts['os_family'] == "Archlinux"
 
     - name: Ensure /etc/greetd Permissions
+      become: true
       file:
         path: /etc/greetd
         owner: greeter
@@ -121,7 +123,7 @@
       when: ansible_facts['os_family'] == "Archlinux"
     
     - name: Set Shell to Zsh
-      become: yes
+      become: true
       user:
         name: thadigus
         shell: /bin/zsh
