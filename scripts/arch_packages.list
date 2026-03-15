@@ -8,8 +8,9 @@ wayland-protocols
 wlroots0.19
 wmenu
 wl-clipboard
-grim
-slurp
+grim-git
+slurp-git
+satty-git
 swaybg
 greetd-git
 greetd-tuigreet-git
