@@ -2,5 +2,5 @@
 set -euo pipefail
 
 cd "$HOME/dotfiles"
-stow --adopt kitty fastfetch zsh dwl
+stow --adopt kitty fastfetch zsh dwl swaylock
 git restore .

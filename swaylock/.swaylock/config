@@ -1,0 +1,4 @@
+scaling=center
+ring-color=#ff00ff
+ignore-empty-password
+show-failed-attempts
