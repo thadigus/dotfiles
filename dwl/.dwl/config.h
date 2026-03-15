@@ -116,7 +116,6 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 /* commands */
 static const char *termcmd[] = { "kitty", NULL };
 static const char *menucmd[] = { "wmenu-run", NULL };
-static const char *lockcmd[] = { "swaylock", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: 2 -> at, etc. */
@@ -146,7 +145,7 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_less,        tagmon,           {.i = WLR_DIRECTION_LEFT} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_greater,     tagmon,           {.i = WLR_DIRECTION_RIGHT} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_s,		  spawn,	    SHCMD("~/dotfiles/scripts/arch_screenshot.sh")},
-	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_q,		  spawn,	    {.v = lockcmd} },
+	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_q,		  spawn,	    SHCMD("~/dotfiles/scripts/arch_screenlock.sh")},
 	TAGKEYS(          XKB_KEY_1, XKB_KEY_exclam,                        0),
 	TAGKEYS(          XKB_KEY_2, XKB_KEY_at,                            1),
 	TAGKEYS(          XKB_KEY_3, XKB_KEY_numbersign,                    2),
