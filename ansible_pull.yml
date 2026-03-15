@@ -86,20 +86,6 @@
         make clean install
       when: ansible_facts['os_family'] == "Archlinux"
 
-    - name: Create greeter User
-      become: true
-      user:
-        name: greeter
-        comment: Greetd Greeter User
-      when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: Create greetd config directory
-      become: true
-      file:
-        path: /etc/greetd/
-        state: directory
-      when: ansible_facts['os_family'] == "Archlinux"
-
     - name: Set tuigreet in greetd config
       become: true
       shell: |
@@ -122,41 +108,7 @@
         mode: '0740'
         recurse: yes
       when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: Create Greetd Service File
-      become: true
-      shell: |
-        cat << EOF > /etc/systemd/system/greetd.service
-        [Unit]
-        Description=Greeter daemon
-        After=systemd-user-sessions.service plymouth-quit-wait.service
-        After=getty@tty1.service
-        Conflicts=getty@tty1.service
-
-        [Service]
-        Type=simple
-        ExecStart=greetd
-        IgnoreSIGPIPE=no
-        SendSIGHUP=yes
-        TimeoutStopSec=30s
-        #KeyringMode=shared
-        Restart=always
-        RestartSec=1
-        StartLimitBurst=5
-        StartLimitInterval=30
-
-        [Install]
-        Alias=display-manager.service
-      when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: Reload and Enable Service
-      become: true
-      systemd_service:
-        name: greetd
-        enabled: true
-        daemon_reload: true
-      when: ansible_facts['os_family'] == "Archlinux"
-    
+ 
     - name: Set Shell to Zsh
       become: true
       user:
