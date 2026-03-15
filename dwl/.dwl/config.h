@@ -22,7 +22,7 @@ static int log_level = WLR_ERROR;
 
 static const Rule rules[] = {
 	/* app_id             title       tags mask     isfloating   monitor */
-	{ "satty",     		  NULL,       0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
+	{ NULL,     		  "satty",    0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
     /* default/example rule: can be changed but cannot be eliminated; at least one rule must exist */
 };
 
