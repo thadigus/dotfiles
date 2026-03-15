@@ -67,5 +67,5 @@
 - name: Build DWL
   become: true
   shell: |
-    cd "{{ user_home }}/dwl"
-    make clean instal
+    cd "{{ user_home }}/.dwl"
+    make clean install
