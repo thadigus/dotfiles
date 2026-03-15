@@ -95,15 +95,14 @@
 
     - name: Set tuigreet in greetd config
       become: yes
-      file:
-        path: /etc/greetd/config.toml
-        contents: |
-          [terminal]
-          vt = 1
+      shell:
+        echo '[terminal]
+        vt = 1
 
-          [default_session]
-          command = "tuigreet --cmd sway"
-          user = "greeter"
+        [default_session]
+        command = "tuigreet --cmd sway"
+        user = "greeter"
+        ' > /etc/greetd/config.toml
       when: ansible_facts['os_family'] == "Archlinux"
 
     - name: Set Shell to Zsh
