@@ -1,5 +1,36 @@
 image=~/dotfiles/img/desktopwallpaper.png
 scaling=fill
-ring-color=#ff00ff
+
+# behavior
 ignore-empty-password
 show-failed-attempts
+line-uses-ring
+
+# base colors
+inside-color=0f172acc
+ring-color=1e293b
+text-color=e2e8f0
+line-color=00000000
+separator-color=00000000
+
+# typing feedback
+key-hl-color=3b82f6
+bs-hl-color=ef4444
+
+# cleared input
+inside-clear-color=0f172acc
+ring-clear-color=3b82f6
+text-clear-color=e2e8f0
+
+# verifying password
+inside-ver-color=0f172acc
+ring-ver-color=60a5fa
+text-ver-color=e2e8f0
+
+# wrong password
+inside-wrong-color=0f172acc
+ring-wrong-color=ef4444
+text-wrong-color=e2e8f0
+
+indicator-radius=120
+indicator-thickness=10
