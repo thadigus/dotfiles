@@ -103,13 +103,14 @@
     - name: Set tuigreet in greetd config
       become: true
       shell: |
-        echo '[terminal]
+        cat << EOF > /etc/greetd/config.toml
+        [terminal]
         vt = 1
 
         [default_session]
-        command = "tuigreet --cmd dwl tuigreet --power-shutdown \'sudo systemctl poweroff\'"
+        command = "tuigreet --cmd dwl tuigreet --power-shutdown 'sudo systemctl poweroff'"
         user = "greeter"
-        ' > /etc/greetd/config.toml
+        EOF
       when: ansible_facts['os_family'] == "Archlinux"
 
     - name: Ensure /etc/greetd Permissions
@@ -120,6 +121,40 @@
         group: greeter
         mode: '0740'
         recurse: yes
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Create Greetd Service File
+      become: true
+      shell: |
+        cat << EOF > /etc/systemd/system/greetd.service
+        [Unit]
+        Description=Greeter daemon
+        After=systemd-user-sessions.service plymouth-quit-wait.service
+        After=getty@tty1.service
+        Conflicts=getty@tty1.service
+
+        [Service]
+        Type=simple
+        ExecStart=greetd
+        IgnoreSIGPIPE=no
+        SendSIGHUP=yes
+        TimeoutStopSec=30s
+        #KeyringMode=shared
+        Restart=always
+        RestartSec=1
+        StartLimitBurst=5
+        StartLimitInterval=30
+
+        [Install]
+        Alias=display-manager.service
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Reload and Enable Service
+      become: true
+      systemd_service:
+        name: greetd
+        enabled: true
+        daemon_reload: true
       when: ansible_facts['os_family'] == "Archlinux"
     
     - name: Set Shell to Zsh
