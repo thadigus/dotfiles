@@ -86,6 +86,12 @@
         make clean install
       when: ansible_facts['os_family'] == "Archlinux"
 
+    - name: Create greeter User
+      user:
+        name: greeter
+        comment: Greetd Greeter User
+      when: ansible_facts['os_family'] == "Archlinux"
+
     - name: Create greetd config directory
       become: yes
       file:
@@ -95,16 +101,25 @@
 
     - name: Set tuigreet in greetd config
       become: yes
-      shell:
+      shell: |
         echo '[terminal]
         vt = 1
 
         [default_session]
-        command = "tuigreet --cmd sway"
+        command = "tuigreet --cmd dwl tuigreet --power-shutdown \'sudo systemctl poweroff\'"
         user = "greeter"
         ' > /etc/greetd/config.toml
       when: ansible_facts['os_family'] == "Archlinux"
 
+    - name: Ensure /etc/greetd Permissions
+      file:
+        path: /etc/greetd
+        owner: greeter
+        group: greeter
+        mode: '0740'
+        recurse: yes
+      when: ansible_facts['os_family'] == "Archlinux"
+    
     - name: Set Shell to Zsh
       become: yes
       user:
