@@ -86,6 +86,26 @@
         make clean install
       when: ansible_facts['os_family'] == "Archlinux"
 
+    - name: Create greetd config directory
+      become: yes
+      file:
+        path: /etc/greetd/
+        state: directory
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Set tuigreet in greetd config
+      become: yes
+      file:
+        path: /etc/greetd/config.toml
+        contents: |
+          [terminal]
+          vt = 1
+
+          [default_session]
+          command = "tuigreet --cmd sway"
+          user = "greeter"
+      when: ansible_facts['os_family'] == "Archlinux"
+
     - name: Set Shell to Zsh
       become: yes
       user:
