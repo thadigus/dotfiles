@@ -1,0 +1,20 @@
+- name: Set tuigreet in greetd config
+  become: true
+  shell: |
+    cat << EOF > /etc/greetd/config.toml
+    [terminal]
+    vt = 1
+
+    [default_session]
+    command = "tuigreet --cmd dwl tuigreet --power-shutdown 'sudo systemctl poweroff'"
+    user = "greeter"
+    EOF
+
+- name: Ensure /etc/greetd Permissions
+  become: true
+  file:
+    path: /etc/greetd
+    owner: greeter
+    group: greeter
+    mode: '0740'
+    recurse: yes

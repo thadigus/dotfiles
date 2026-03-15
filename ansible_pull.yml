@@ -16,130 +16,21 @@
         repo: git@github.com:thadigus/dotfiles.git
         dest: "{{ dotfiles_dir }}"
         update: true
-
     # ── Arch Linux ──────────────────────────────────────────────
-    - name: Arch - Ensure base-devel and git are present
-      become: true
-      package:
-        name:
-          - base-devel
-          - git
-        state: present
+    - name: arch-dotfiles-dwl Role
+      include_role:
+        name: arch-dotfiles-dwl
       when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: Arch - Build and install yay-bin when missing
-      become: false
-      shell: |
-        set -euo pipefail
-        [[ -x /usr/bin/yay ]] && exit 0
-        build_dir="$HOME/.cache/yay-bin"
-        rm -rf "$build_dir"
-        mkdir -p "$build_dir"
-        git clone https://aur.archlinux.org/yay-bin.git "$build_dir"
-        cd "$build_dir"
-        makepkg --syncdeps --install --noconfirm --needed
-      args:
-        executable: /bin/bash
+    - name: arch-yay-packages Role
+      include_role: 
+        name: arch-yay-packages
       when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: Arch - Read package list
-      slurp:
-        src: "{{ dotfiles_dir }}/scripts/arch_packages.list"
-      register: arch_packages_file
+    - name: arch-tuigreetd Role
+      include_role:
+        name: arch-tuigreetd
       when: ansible_facts['os_family'] == "Archlinux"
-
-    #- name: Arch - Install packages via yay
-    #  become: false
-    #  shell: |
-    #    set -euo pipefail
-    #    /usr/bin/yay -S --noconfirm --needed {{ (arch_packages_file.content | b64decode).splitlines()
-    #      | map('trim') | reject('match', '^$') | reject('match', '^#') | join(' ') }}
-    #  args:
-    #    executable: /bin/bash
-    #  when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: Arch - Ensure cronie is enabled
-      become: true
-      service:
-        name: cronie
-        state: started
-        enabled: true
-      when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: "Clone latest DWL to {{ ansible_facts['env']['HOME'] }}"
-      git:
-        repo: https://codeberg.org/dwl/dwl.git
-        dest: "{{ user_home }}/dwl"
-        update: true
-      when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: Arch - Apply dotfiles via stow
-      shell: "{{ dotfiles_dir }}/scripts/arch_dotfiles.sh"
-      args:
-        executable: /bin/bash
-      when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: Build DWL
-      become: true
-      shell: |
-        cd "{{ user_home }}/dwl"
-        make clean install
-      when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: Set tuigreet in greetd config
-      become: true
-      shell: |
-        cat << EOF > /etc/greetd/config.toml
-        [terminal]
-        vt = 1
-
-        [default_session]
-        command = "tuigreet --cmd dwl tuigreet --power-shutdown 'sudo systemctl poweroff'"
-        user = "greeter"
-        EOF
-      when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: Ensure /etc/greetd Permissions
-      become: true
-      file:
-        path: /etc/greetd
-        owner: greeter
-        group: greeter
-        mode: '0740'
-        recurse: yes
-      when: ansible_facts['os_family'] == "Archlinux"
- 
-    - name: Set Shell to Zsh
-      become: true
-      user:
-        name: thadigus
-        shell: /bin/zsh
-      when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: Arch - Ensure update-on-reboot cron exists
-      cron:
-        name: Update Dotfiles on Reboot
-        special_time: reboot
-        job: "{{ dotfiles_dir }}/scripts/arch_logon.sh"
-      when: ansible_facts['os_family'] == "Archlinux"
-
     # ── macOS ───────────────────────────────────────────────────
-    - name: macOS - Ensure Homebrew is installed
-      shell: |
-        set -euo pipefail
-        command -v brew >/dev/null 2>&1 || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      args:
-        executable: /bin/bash
-      when: ansible_facts['os_family'] == "Darwin"
-
-    - name: macOS - Install packages from Brewfile
-      shell: brew bundle --file "{{ dotfiles_dir }}/scripts/Brewfile"
-      args:
-        executable: /bin/bash
-      when: ansible_facts['os_family'] == "Darwin"
-
-    - name: macOS - Apply dotfiles via stow
-      shell: "{{ dotfiles_dir }}/scripts/macos_dotfiles.sh"
-      args:
-        executable: /bin/bash
+    - name: macOS General Config Role
+      include_role:
+        name: macos-general-config
       when: ansible_facts['os_family'] == "Darwin"

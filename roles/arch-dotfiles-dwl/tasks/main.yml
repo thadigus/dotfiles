@@ -1,0 +1,54 @@
+- name: Arch - Ensure base-devel and git are present
+  become: true
+  package:
+    name:
+      - base-devel
+      - git
+    state: present
+
+- name: Arch - Build and install yay-bin when missing
+  become: false
+  shell: |
+    set -euo pipefail
+    [[ -x /usr/bin/yay ]] && exit 0
+    build_dir="$HOME/.cache/yay-bin"
+    rm -rf "$build_dir"
+    mkdir -p "$build_dir"
+    git clone https://aur.archlinux.org/yay-bin.git "$build_dir"
+    cd "$build_dir"
+    makepkg --syncdeps --install --noconfirm --needed
+  args:
+    executable: /bin/bash
+
+- name: Arch - Read package list
+  slurp:
+    src: "{{ dotfiles_dir }}/scripts/arch_packages.list"
+  register: arch_packages_file
+
+#- name: Arch - Install packages via yay
+#  become: false
+#  shell: |
+#    set -euo pipefail
+#    /usr/bin/yay -S --noconfirm --needed {{ (arch_packages_file.content | b64decode).splitlines()
+#      | map('trim') | reject('match', '^$') | reject('match', '^#') | join(' ') }}
+#  args:
+#    executable: /bin/bash
+
+- name: Arch - Ensure cronie is enabled
+  become: true
+  service:
+    name: cronie
+    state: started
+    enabled: true
+
+- name: Arch - Ensure update-on-reboot cron exists
+  cron:
+    name: Update Dotfiles on Reboot
+    special_time: reboot
+    job: "{{ dotfiles_dir }}/scripts/arch_logon.sh"
+
+- name: Set Shell to Zsh
+  become: true
+  user:
+    name: thadigus
+    shell: /bin/zsh

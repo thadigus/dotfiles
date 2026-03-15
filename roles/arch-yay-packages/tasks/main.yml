@@ -1,0 +1,16 @@
+- name: "Clone latest DWL to {{ ansible_facts['env']['HOME'] }}"
+  git:
+    repo: https://codeberg.org/dwl/dwl.git
+    dest: "{{ user_home }}/dwl"
+    update: true
+
+- name: Arch - Apply dotfiles via stow
+  shell: "{{ dotfiles_dir }}/scripts/arch_dotfiles.sh"
+  args:
+    executable: /bin/bash
+
+- name: Build DWL
+  become: true
+  shell: |
+    cd "{{ user_home }}/dwl"
+    make clean install

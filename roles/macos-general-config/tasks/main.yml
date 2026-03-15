@@ -1,0 +1,16 @@
+- name: macOS - Ensure Homebrew is installed
+  shell: |
+    set -euo pipefail
+    command -v brew >/dev/null 2>&1 || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  args:
+    executable: /bin/bash
+
+- name: macOS - Install packages from Brewfile
+  shell: brew bundle --file "{{ dotfiles_dir }}/scripts/Brewfile"
+  args:
+    executable: /bin/bash
+
+- name: macOS - Apply dotfiles via stow
+  shell: "{{ dotfiles_dir }}/scripts/macos_dotfiles.sh"
+  args:
+    executable: /bin/bash
