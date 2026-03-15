@@ -48,15 +48,15 @@
       register: arch_packages_file
       when: ansible_facts['os_family'] == "Archlinux"
 
-    - name: Arch - Install packages via yay
-      become: false
-      shell: |
-        set -euo pipefail
-        /usr/bin/yay -S --noconfirm --needed {{ (arch_packages_file.content | b64decode).splitlines()
-          | map('trim') | reject('match', '^$') | reject('match', '^#') | join(' ') }}
-      args:
-        executable: /bin/bash
-      when: ansible_facts['os_family'] == "Archlinux"
+    #- name: Arch - Install packages via yay
+    #  become: false
+    #  shell: |
+    #    set -euo pipefail
+    #    /usr/bin/yay -S --noconfirm --needed {{ (arch_packages_file.content | b64decode).splitlines()
+    #      | map('trim') | reject('match', '^$') | reject('match', '^#') | join(' ') }}
+    #  args:
+    #    executable: /bin/bash
+    #  when: ansible_facts['os_family'] == "Archlinux"
 
     - name: Arch - Ensure cronie is enabled
       become: true
