@@ -21,10 +21,6 @@
       include_role:
         name: arch-dotfiles-dwl
       when: ansible_facts['os_family'] == "Archlinux"
-    - name: arch-yay-packages Role
-      include_role: 
-        name: arch-yay-packages
-      when: ansible_facts['os_family'] == "Archlinux"
     - name: arch-tuigreetd Role
       include_role:
         name: arch-tuigreetd
