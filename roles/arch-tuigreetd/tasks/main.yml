@@ -12,7 +12,7 @@
 
 - name: Add tuigreet Config
   become: true
-  cp:
+  copy:
     src: "{{ dotfiles_dir }}/tui-greetd/config.toml"
     dest: "/etc/greetd/tui-greetd.toml"
 
