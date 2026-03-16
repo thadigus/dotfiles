@@ -7,7 +7,7 @@
     args = [
         "--config", "/etc/greetd/tui-greetd.toml"
     ]
-    user-session = "sway"
+    user-session = "/home/thadigus/dotfiles/scripts/arch_start_dwl.sh"
     EOF
 
 - name: Add tuigreet Config
