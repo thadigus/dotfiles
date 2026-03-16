@@ -1,0 +1,46 @@
+[greeter]
+# Background image
+background = "~/dotfiles/img/desktopwallpaper.png"
+background_mode = "fill"
+
+# Indicator circle appearance
+indicator_radius = 120
+indicator_thickness = 10
+line_uses_ring = true  # mirror swaylock's line-uses-ring
+
+# Base colors
+colors = { 
+    inside = "#0f172acc",          # base inside color
+    ring = "#1e293b",              # default ring
+    text = "#e2e8f0",              # default text
+    line = "#00000000",            # line color
+    separator = "#00000000"        # separator color
+}
+
+# Typing feedback
+key_highlight = "#3b82f6"
+backspace_highlight = "#ef4444"
+
+# Cleared input state
+[colors.cleared]
+inside = "#0f172acc"
+ring = "#3b82f6"
+text = "#e2e8f0"
+
+# Verifying password state
+[colors.verifying]
+inside = "#0f172acc"
+ring = "#60a5fa"
+text = "#e2e8f0"
+
+# Wrong password state
+[colors.wrong]
+inside = "#0f172acc"
+ring = "#ef4444"
+text = "#e2e8f0"
+
+# Behavior options
+behavior = { 
+    ignore_empty_password = true,
+    show_failed_attempts = true
+}

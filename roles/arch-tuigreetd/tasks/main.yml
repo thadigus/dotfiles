@@ -2,13 +2,19 @@
   become: true
   shell: |
     cat << EOF > /etc/greetd/config.toml
-    [terminal]
-    vt = 1
-
-    [default_session]
-    command = "tuigreet --cmd /home/thadigus/dotfiles/scripts/arch_start_dwl.sh"
-    user = "greeter"
+    [default]
+    path = "/usr/bin/tui-greetd"
+    args = [
+        "--config", "/etc/greetd/tui-greetd.toml"
+    ]
+    user-session = "sway"
     EOF
+
+- name: Add tuigreet Config
+  become: true
+  cp:
+    src: "{{ dotfiles_dir }}/tui-greetd/config.toml"
+    dest: "/etc/greetd/tui-greetd.toml"
 
 - name: Ensure /etc/greetd Permissions
   become: true
