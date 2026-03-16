@@ -2,14 +2,13 @@
   become: true
   shell: |
     cat << EOF > /etc/greetd/config.toml
-    [default]
-    path = "/usr/bin/tui-greetd"
-    args = [
-        "--config", "/etc/greetd/tui-greetd.toml"
-    ]
-    user-session = "/home/thadigus/dotfiles/scripts/arch_start_dwl.sh"
-    EOF
+    [terminal]
+    vt = 1
 
+    [default_session]
+    command = "tuigreet --config /etc/tui-greetd/config.toml --cmd /home/thadigus/dotfiles/scripts/arch_start_dwl.sh"
+    user = "greeter"
+    EOF
 - name: Add tuigreet Config
   become: true
   copy:
