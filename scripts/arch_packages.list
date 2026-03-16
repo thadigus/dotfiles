@@ -29,10 +29,9 @@ openssh
 stow
 network-manager-applet
 dolphin
-rofi
-neovim
 
 # Personal Utilities
+neovim
 kitty
 tmux
 zsh
