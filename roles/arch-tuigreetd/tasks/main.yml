@@ -6,14 +6,9 @@
     vt = 1
 
     [default_session]
-    command = "tuigreet --config /etc/tui-greetd/config.toml --cmd /home/thadigus/dotfiles/scripts/arch_start_dwl.sh"
+    command = "tuigreet -t --theme 'border=blue;container=black;text=cyan;time=red;prompt=green;input=red;action=blue;button=yellow;greet=cyan' --cmd /home/thadigus/dotfiles/scripts/arch_start_dwl.sh"
     user = "greeter"
     EOF
-- name: Add tuigreet Config
-  become: true
-  copy:
-    src: "{{ dotfiles_dir }}/tui-greetd/config.toml"
-    dest: "/etc/greetd/tui-greetd.toml"
 
 - name: Ensure /etc/greetd Permissions
   become: true
