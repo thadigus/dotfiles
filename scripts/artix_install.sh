@@ -396,7 +396,7 @@ main() {
 
   collect_initial_inputs
 
-  if [[ "$(need_cmd sgdisk)" ]]; then
+  if need_cmd sgdisk; then
     echo "sgdisk already installed..."
   else
     yes | pacman -Sy gptfdisk
