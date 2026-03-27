@@ -25,6 +25,10 @@ BASE_PKGS=(
   sbctl
 )
 
+need_cmd() {
+  command -v "$1" >/dev/null 2>&1 || err "Missing required command: $1"
+}
+
 cleanup_previous_attempt() {
   info "Cleaning up any previous partial install state"
   swapoff -a 2>/dev/null || true
