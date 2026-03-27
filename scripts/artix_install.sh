@@ -150,7 +150,6 @@ partition_target() {
   sgdisk -n 1:1MiB:+550MiB -t 1:EF00 -c 1:EFI "$target"
   sgdisk -n 2:0:+2GiB -t 2:8309 -c 2:CRYPTBOOT "$target"
   sgdisk -n 3:0:0 -t 3:8309 -c 3:CRYPTROOT "$target"
-  partprobe "$target"
 
   sleep 2
 }
@@ -166,7 +165,6 @@ partition_raid_members() {
     sgdisk -n 1:1MiB:+550MiB -t 1:FD00 -c 1:RAIDEFI "$d"
     sgdisk -n 2:0:+2GiB -t 2:FD00 -c 2:RAIDBOOT "$d"
     sgdisk -n 3:0:0 -t 3:FD00 -c 3:RAIDROOT "$d"
-    partprobe "$d"
   done
 
   sleep 2
