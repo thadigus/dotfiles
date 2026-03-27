@@ -30,7 +30,7 @@ err() {
   exit 1
 }
 
-info() {
+info_msg() {
   printf '\n==> %s\n' "$*"
 }
 
@@ -39,7 +39,7 @@ need_cmd() {
 }
 
 cleanup_previous_attempt() {
-  info "Cleaning up any previous partial install state"
+  info_msg "Cleaning up any previous partial install state"
   swapoff -a 2>/dev/null || true
   umount -R "$MOUNT_ROOT" 2>/dev/null || true
 
@@ -143,7 +143,7 @@ detect_install_layout() {
 
 partition_target() {
   local target="$1"
-  info "Partitioning $target"
+  info_msg "Partitioning $target"
 
   sgdisk --zap-all "$target"
   sgdisk -o "$target"
@@ -159,7 +159,7 @@ partition_raid_members() {
   local disk_a="$1"
   local disk_b="$2"
 
-  info "Partitioning RAID member disks: $disk_a and $disk_b"
+  info_msg "Partitioning RAID member disks: $disk_a and $disk_b"
   for d in "$disk_a" "$disk_b"; do
     sgdisk --zap-all "$d"
     sgdisk -o "$d"
@@ -195,19 +195,19 @@ setup_luks_lvm() {
   printf '%s' "$BOOT_LUKS_PASSPHRASE" >"$boot_key_file"
   printf '%s' "$ROOT_LUKS_PASSPHRASE" >"$root_key_file"
 
-  info "Formatting EFI partition: $efi_part"
+  info_msg "Formatting EFI partition: $efi_part"
   mkfs.fat -F32 "$efi_part"
 
-  info "Creating /boot LUKS container (PBKDF2 for GRUB): $boot_crypt_part"
+  info_msg "Creating /boot LUKS container (PBKDF2 for GRUB): $boot_crypt_part"
   cryptsetup luksFormat --batch-mode --pbkdf pbkdf2 --key-file "$boot_key_file" "$boot_crypt_part"
   cryptsetup open "$boot_crypt_part" "$CRYPT_BOOT_NAME" --key-file "$boot_key_file"
   mkfs.ext4 "/dev/mapper/$CRYPT_BOOT_NAME"
 
-  info "Creating root LUKS container (default stronger settings): $root_crypt_part"
+  info_msg "Creating root LUKS container (default stronger settings): $root_crypt_part"
   cryptsetup luksFormat --batch-mode --key-file "$root_key_file" "$root_crypt_part"
   cryptsetup open "$root_crypt_part" "$CRYPT_NAME" --key-file "$root_key_file"
 
-  info "Creating LVM on /dev/mapper/$CRYPT_NAME"
+  info_msg "Creating LVM on /dev/mapper/$CRYPT_NAME"
   pvcreate "/dev/mapper/$CRYPT_NAME"
   vgcreate "$VG_NAME" "/dev/mapper/$CRYPT_NAME"
 
@@ -215,7 +215,7 @@ setup_luks_lvm() {
   ram_kb="$(awk '/MemTotal/ {print $2}' /proc/meminfo)"
   swap_gb="$(( (ram_kb + 1024*1024 - 1) / (1024*1024) + 1 ))"
 
-  info "Creating logical volumes (swap=${swap_gb}G)"
+  info_msg "Creating logical volumes (swap=${swap_gb}G)"
   lvcreate -L "${swap_gb}G" -n swap "$VG_NAME"
   lvcreate -l 23%FREE -n root "$VG_NAME"
   lvcreate -l 12%FREE -n var "$VG_NAME"
@@ -224,7 +224,7 @@ setup_luks_lvm() {
   lvcreate -l 10%FREE -n opt "$VG_NAME"
   lvcreate -l 100%FREE -n home "$VG_NAME"
 
-  info "Formatting filesystems"
+  info_msg "Formatting filesystems"
   mkfs.ext4 "/dev/$VG_NAME/root"
   mkfs.ext4 "/dev/$VG_NAME/home"
   mkfs.ext4 "/dev/$VG_NAME/var"
@@ -233,7 +233,7 @@ setup_luks_lvm() {
   mkfs.ext4 "/dev/$VG_NAME/opt"
   mkswap "/dev/$VG_NAME/swap"
 
-  info "Mounting target filesystems"
+  info_msg "Mounting target filesystems"
   mount "/dev/$VG_NAME/root" "$MOUNT_ROOT"
   mount --mkdir "/dev/mapper/$CRYPT_BOOT_NAME" "$MOUNT_ROOT/boot"
   mount --mkdir "$efi_part" "$MOUNT_ROOT/boot/efi"
@@ -284,7 +284,7 @@ configure_system() {
     requested_pkgs+=("$microcode")
   fi
 
-  info "Installing base system via basestrap"
+  info_msg "Installing base system via basestrap"
   basestrap -K "$MOUNT_ROOT" "${requested_pkgs[@]}"
 
   fstabgen -U "$MOUNT_ROOT" >> "$MOUNT_ROOT/etc/fstab"
@@ -391,7 +391,7 @@ main() {
     err "Run as root."
   fi
 
-  info "Artix install bootstrap."
+  info_msg "Artix install bootstrap."
   cleanup_previous_attempt
 
   collect_initial_inputs
@@ -404,11 +404,11 @@ main() {
 
   local install_mode disk_a disk_b target_disk efi_part boot_luks_part root_luks_part
   read -r install_mode disk_a disk_b < <(detect_install_layout)
-  info "Detected install mode: $install_mode"
+  info_msg "Detected install mode: $install_mode"
 
   if [[ "$install_mode" == "raid" ]]; then
     [[ -n "${disk_a:-}" && -n "${disk_b:-}" ]] || err "RAID mode selected but disk pair was not resolved."
-    info "Using RAID1 across: $disk_a and $disk_b"
+    info_msg "Using RAID1 across: $disk_a and $disk_b"
 
     partition_raid_members "$disk_a" "$disk_b"
     mdadm --stop /dev/md0 2>/dev/null || true
@@ -432,7 +432,7 @@ main() {
   else
     target_disk="$disk_a"
     [[ -n "${target_disk:-}" ]] || err "Single-disk mode selected but disk was not resolved."
-    info "Using single NVMe disk: $target_disk"
+    info_msg "Using single NVMe disk: $target_disk"
     partition_target "$target_disk"
     efi_part="$(part_path "$target_disk" 1)"
     boot_luks_part="$(part_path "$target_disk" 2)"
@@ -442,7 +442,7 @@ main() {
   setup_luks_lvm "$efi_part" "$boot_luks_part" "$root_luks_part"
   configure_system "$root_luks_part" "$boot_luks_part" "$install_mode"
 
-  info "Install complete. Syncing disks, unmounting, and rebooting."
+  info_msg "Install complete. Syncing disks, unmounting, and rebooting."
   sync
   swapoff -a || true
   umount -R "$MOUNT_ROOT" || true
