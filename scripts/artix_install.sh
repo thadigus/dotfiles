@@ -20,7 +20,7 @@ BASE_PKGS=(
   runit elogind-runit
   grub efibootmgr
   networkmanager sudo ansible git
-  lvm2 cryptsetup mdadm
+  lvm2 cryptsetup mdadm gptfdisk
   dosfstools e2fsprogs util-linux
   sbctl
 )
@@ -371,7 +371,6 @@ CHROOT
 main() {
   need_cmd lsblk
   need_cmd mdadm
-  need_cmd sgdisk
   need_cmd cryptsetup
   need_cmd pvcreate
   need_cmd basestrap
@@ -387,6 +386,12 @@ main() {
   cleanup_previous_attempt
 
   collect_initial_inputs
+
+  if [[ "$(need_cmd sgdisk)" ]]; then
+    echo "sgdisk already installed..."
+  else
+    yes | pacman -Sy gptfdisk
+  fi
 
   local install_mode disk_a disk_b target_disk efi_part boot_luks_part root_luks_part
   read -r install_mode disk_a disk_b < <(detect_install_layout)
