@@ -25,6 +25,15 @@ BASE_PKGS=(
   sbctl
 )
 
+err() {
+  printf 'ERROR: %s\n' "$*" >&2
+  exit 1
+}
+
+info() {
+  printf '\n==> %s\n' "$*"
+}
+
 need_cmd() {
   command -v "$1" >/dev/null 2>&1 || err "Missing required command: $1"
 }
