@@ -383,6 +383,7 @@ CHROOT
   chmod +x "$MOUNT_ROOT/root/postinstall.sh"
   artix-chroot "$MOUNT_ROOT" /root/postinstall.sh
   rm -f "$MOUNT_ROOT/root/postinstall.sh"
+
 }
 
 main() {
@@ -408,6 +409,8 @@ main() {
   ensure_cmd mkfs.fat dosfstools
   ensure_cmd mkfs.ext4 e2fsprogs
 
+  pacman -S --noconfirm --needed pacman-mirrorlist
+  
   local install_mode disk_a disk_b target_disk efi_part boot_luks_part root_luks_part
   read -r install_mode disk_a disk_b < <(detect_install_layout)
   info_msg "Detected install mode: $install_mode"
