@@ -27,7 +27,6 @@ BASE_PKGS=(
 
 err() {
   printf 'ERROR: %s\n' "$*" >&2
-  exit 1
 }
 
 info_msg() {
@@ -36,6 +35,16 @@ info_msg() {
 
 need_cmd() {
   command -v "$1" >/dev/null 2>&1 || err "Missing required command: $1"
+}
+
+ensure_cmd() {
+  local cmd="$1"
+  local pkg="${2:-$1}"
+
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    info_msg "Missing $cmd, installing package: $pkg"
+    pacman -Sy --noconfirm "$pkg" || err "Failed to install $pkg"
+  fi
 }
 
 cleanup_previous_attempt() {
@@ -394,11 +403,9 @@ main() {
 
   collect_initial_inputs
 
-  if need_cmd sgdisk; then
-    echo "sgdisk already installed..."
-  else
-    yes | pacman -Sy gptfdisk
-  fi
+  ensure_cmd sgdisk gptfdisk
+  ensure_cmd mkfs.fat dosfstools
+  ensure_cmd mkfs.ext4 e2fsprogs
 
   local install_mode disk_a disk_b target_disk efi_part boot_luks_part root_luks_part
   read -r install_mode disk_a disk_b < <(detect_install_layout)
