@@ -19,7 +19,8 @@ BASE_PKGS=(
   base base-devel linux linux-firmware
   runit elogind-runit
   grub efibootmgr
-  networkmanager sudo ansible git
+  networkmanager networkmanager-runit
+  sudo ansible git
   lvm2 cryptsetup mdadm gptfdisk
   dosfstools e2fsprogs util-linux
   sbctl
