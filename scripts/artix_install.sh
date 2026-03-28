@@ -339,7 +339,7 @@ useradd -m -G wheel -s /bin/bash -p '$user_password_hash' $INSTALL_USERNAME
 passwd -l root || true
 
 # Setup Network Manager to start with Runit
-ln -s /etc/runit/sv/NetworkManager /run/runit/service
+ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default
 
 if [[ "$gpu_vendor" == "amd" ]]; then
   pacman -S --noconfirm --needed mesa xf86-video-amdgpu vulkan-radeon || true
