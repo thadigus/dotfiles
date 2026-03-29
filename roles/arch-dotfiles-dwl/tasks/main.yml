@@ -25,18 +25,17 @@
     src: "{{ dotfiles_dir }}/scripts/arch_packages.list"
   register: arch_packages_file
 
-#- name: Arch - Install packages via yay
-#  become: false
-#  shell: |
-#    set -euo pipefail
-#    /usr/bin/yay -S --noconfirm --needed {{ (arch_packages_file.content | b64decode).splitlines()
-#      | map('trim') | reject('match', '^$') | reject('match', '^#') | join(' ') }}
-#  args:
-#    executable: /bin/bash
+- name: Arch - Install packages via yay
+  become: false
+  pacman:
+    name: {{ (arch_packages_file.content | b64decode).splitlines() | map('trim') | reject('match', '^$') | reject('match', '^#')}}
+    state: present
+    executabe: yay
+    extra_args: --builddir /var/cache/yay
 
-- name: Arch - Ensure cronie is enabled
+- name: Artix - Ensure cronie is enabled
   become: true
-  service:
+  runit:
     name: cronie
     state: started
     enabled: true

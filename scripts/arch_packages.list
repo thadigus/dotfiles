@@ -23,7 +23,7 @@ pipewire
 polkit
 
 # OS Utilities
-cronie
+cronie-runit
 man-db
 man-pages
 openssh
