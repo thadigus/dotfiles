@@ -39,6 +39,8 @@
     name: cronie
     state: started
     enabled: true
+    service_src: "/etc/runit/sv"
+    service_dir: "/run/runit/service"
 
 - name: Arch - Ensure update-on-reboot cron exists
   cron:
