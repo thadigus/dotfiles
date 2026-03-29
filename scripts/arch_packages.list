@@ -18,7 +18,7 @@ greetd-git
 greetd-tuigreet-git
 ttf-jetbrains-mono-nerd
 xorg-xwayland
-plymouth-git
+#plymouth-git
 pipewire
 polkit
 
