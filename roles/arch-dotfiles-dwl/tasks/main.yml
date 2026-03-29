@@ -28,7 +28,7 @@
 - name: Arch - Install packages via yay
   become: false
   pacman:
-    name: {{ (arch_packages_file.content | b64decode).splitlines() | map('trim') | reject('match', '^$') | reject('match', '^#')}}
+    name: "{{ (arch_packages_file.content | b64decode).splitlines() | map('trim') | reject('match', '^$') | reject('match', '^#')}}"
     state: present
     executabe: yay
     extra_args: --builddir /var/cache/yay
