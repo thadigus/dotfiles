@@ -43,4 +43,4 @@ brightnessctl
 zen-browser-bin
 proton-mail-bin
 proton-pass-bin
-proton-vpn-qt-app
+#proton-vpn-qt-app
