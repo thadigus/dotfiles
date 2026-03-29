@@ -6,7 +6,7 @@ git
 wayland
 wayland-protocols
 wlroots0.19
-wmenu
+wmenu-git
 wl-clipboard
 grim
 slurp-git
