@@ -14,7 +14,7 @@ satty-git
 swaybg
 swaylock
 imagemagick
-greetd-git
+greetd-runit
 greetd-tuigreet-git
 ttf-jetbrains-mono-nerd
 xorg-xwayland
