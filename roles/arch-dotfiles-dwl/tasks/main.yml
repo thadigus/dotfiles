@@ -26,12 +26,12 @@
   register: arch_packages_file
 
 - name: Arch - Install packages via yay
-  become: false
+  become: true
   pacman:
-    name: "{{ (arch_packages_file.content | b64decode).splitlines() | map('trim') | reject('match', '^$') | reject('match', '^#')}}"
+    name: "{{ (arch_packages_file.content | b64decode).splitlines() | map('trim') | reject('match', '^$') | reject('match', '^#') }}"
     state: present
     executable: yay
-    extra_args: --builddir /var/cache/yay
+    extra_args: --builddir /var/cache/yay --noconfirm --needed --sudoloop
 
 - name: Artix - Ensure cronie is enabled
   become: true
