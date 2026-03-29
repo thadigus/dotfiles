@@ -30,7 +30,7 @@
   pacman:
     name: "{{ (arch_packages_file.content | b64decode).splitlines() | map('trim') | reject('match', '^$') | reject('match', '^#')}}"
     state: present
-    executabe: yay
+    executable: yay
     extra_args: --builddir /var/cache/yay
 
 - name: Artix - Ensure cronie is enabled
