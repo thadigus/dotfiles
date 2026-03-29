@@ -20,7 +20,7 @@ BASE_PKGS=(
   runit elogind-runit
   grub efibootmgr
   networkmanager networkmanager-runit
-  sudo ansible git
+  sudo ansible git openssh
   lvm2 cryptsetup mdadm gptfdisk
   dosfstools e2fsprogs util-linux
   sbctl
@@ -296,6 +296,9 @@ configure_system() {
   basestrap -K "$MOUNT_ROOT" "${requested_pkgs[@]}"
 
   fstabgen -U "$MOUNT_ROOT" >> "$MOUNT_ROOT/etc/fstab"
+  sed -i '\|[[:space:]]/boot[[:space:]]|c\/dev/mapper/'"$CRYPT_BOOT_NAME"' /boot ext4 defaults,nofail 0 2' "$MOUNT_ROOT/etc/fstab"
+  sed -i "s/relatime/relatime,discard/g" /mnt/etc/fstab
+  echo 'tmpfs	/tmp	tmpfs	rw,nosuid,nodev,relatime,size=8G,mode=1777	0 0' >> "$MOUNT_ROOT/etc/fstab"
 
   if [[ "$install_mode" == "raid" ]] && [[ -e /dev/md0 ]]; then
     mdadm --detail --scan > "$MOUNT_ROOT/etc/mdadm.conf"
@@ -324,11 +327,11 @@ cat > /etc/hosts <<'HOSTS'
 127.0.1.1 $INSTALL_HOSTNAME.localdomain $INSTALL_HOSTNAME
 HOSTS
 
-sed -i 's/^HOOKS=.*/HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block mdadm_udev encrypt lvm2 filesystems fsck)/' /etc/mkinitcpio.conf
+sed -i 's/^HOOKS=.*/HOOKS=(base udev autodetect modconf kms keyboard keymap consolefont block mdadm_udev encrypt lvm2 resume filesystems fsck)/' /etc/mkinitcpio.conf
 mkinitcpio -P
 
-cat > /etc/crypttab <<'CRYPTTAB'
-$CRYPT_BOOT_NAME UUID=$boot_luks_uuid none luks
+cat > /etc/crypttab <<CRYPTTAB
+$CRYPT_BOOT_NAME UUID=$boot_luks_uuid none luks,tries=1
 CRYPTTAB
 
 sed -i 's|^# %wheel ALL=(ALL:ALL) ALL|%wheel ALL=(ALL:ALL) ALL|' /etc/sudoers
@@ -340,6 +343,9 @@ passwd -l root || true
 
 # Setup Network Manager to start with Runit
 ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default
+
+pacman-key --init
+pacman-key --populate artix
 
 if [[ "$gpu_vendor" == "amd" ]]; then
   pacman -S --noconfirm --needed mesa xf86-video-amdgpu vulkan-radeon || true
@@ -364,8 +370,9 @@ else
   pacman -S --noconfirm --needed mesa || true
 fi
 
-echo 'GRUB_ENABLE_CRYPTODISK=y' >> /etc/default/grub
+sed -i 's|^#\?GRUB_ENABLE_CRYPTODISK=.*|GRUB_ENABLE_CRYPTODISK=y|' /etc/default/grub
 sed -i 's|^GRUB_CMDLINE_LINUX=.*|GRUB_CMDLINE_LINUX="cryptdevice=UUID=$root_luks_uuid:$CRYPT_NAME root=/dev/$VG_NAME/root resume=/dev/$VG_NAME/swap"|' /etc/default/grub
+sed -i 's|^#\?GRUB_PRELOAD_MODULES=.*|GRUB_PRELOAD_MODULES="lvm cryptodisk luks"|' /etc/default/grub
 
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch
 grub-mkconfig -o /boot/grub/grub.cfg
