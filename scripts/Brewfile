@@ -9,6 +9,8 @@ brew "neovim"
 brew "fastfetch"
 brew "zsh-git-prompt"
 brew "stow"
+brew "socktainer"
+brew "docker"
 
 # Casks (GUI Apps)
 cask "kitty"
@@ -17,6 +19,7 @@ cask "powershell"
 cask "spotify"
 cask "wifiman"
 cask "ultimaker-cura"
+cask "container"
 
 # Stuff I'm forced to have for work...
 cask "visual-studio-code"
