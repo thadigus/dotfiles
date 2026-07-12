@@ -1,0 +1,170 @@
+#!/usr/bin/env bash
+#
+# Coder dotfiles bootstrap
+# ========================
+# Coder (`coder dotfiles`) clones this repo to ~/.config/coderv2/dotfiles and
+# runs the FIRST install script it finds. `script/bootstrap` is one of the
+# recognized paths (the dir is `script`, SINGULAR). Because an install script is
+# present, Coder does NOT auto-symlink anything -- this script does it (via stow).
+#
+# It re-runs on EVERY workspace start (Coder git-pulls then re-runs), so every
+# step is idempotent and non-interactive.
+#
+# Target: codercom/enterprise-base:ubuntu (amd64), user `coder`, passwordless
+# sudo. Everything is installed with apt by preference. Note on persistence:
+# only $HOME survives a restart, so apt packages get reinstalled on each start
+# -- that's fine and cheap because every install is guarded by `command -v`.
+# The one thing with no apt package is oh-my-zsh, which is git-cloned into
+# ~/.oh-my-zsh (that lives in the persisted $HOME, so it clones only once).
+
+set -euo pipefail
+
+# Run from the repo root regardless of Coder's cwd.
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$REPO_ROOT"
+
+WHOAMI="$(id -un)"
+
+log()  { printf '\033[1;34m[bootstrap]\033[0m %s\n' "$*"; }
+warn() { printf '\033[1;33m[bootstrap:warn]\033[0m %s\n' "$*" >&2; }
+
+# Non-interactive apt wrapper.
+APT() { sudo env DEBIAN_FRONTEND=noninteractive apt-get "$@"; }
+
+# ---------------------------------------------------------------------------
+# 1. System packages via apt (ephemeral -> reinstalled each start if missing).
+# ---------------------------------------------------------------------------
+# "command:apt-package" pairs. fastfetch is handled separately (step 2) because
+# it may need a PPA and must not be able to fail this whole batch.
+TOOL_PKGS=(
+  "git:git"      # for the oh-my-zsh clone (also pre-authed to Forgejo)
+  "stow:stow"    # GNU Stow -- used for all symlinking (step 4)
+  "zsh:zsh"      # login shell + oh-my-zsh
+  "tmux:tmux"
+  "rg:ripgrep"
+  "fdfind:fd-find"
+  "fzf:fzf"
+  "nvim:neovim"
+)
+
+if command -v apt-get >/dev/null 2>&1; then
+  missing=()
+  for pair in "${TOOL_PKGS[@]}"; do
+    cmd="${pair%%:*}"; pkg="${pair#*:}"
+    command -v "$cmd" >/dev/null 2>&1 || missing+=("$pkg")
+  done
+  # Packages with no binary to probe via `command -v`:
+  #   kitty-terminfo: correct rendering when connecting FROM a kitty terminal.
+  #   ca-certificates: TLS trust for the github clone / PPA below.
+  for pkg in kitty-terminfo ca-certificates; do
+    dpkg -s "$pkg" >/dev/null 2>&1 || missing+=("$pkg")
+  done
+
+  if [ "${#missing[@]}" -gt 0 ]; then
+    log "Installing apt packages: ${missing[*]}"
+    APT update -y || warn "apt-get update failed (continuing)"
+    if ! APT install -y --no-install-recommends "${missing[@]}"; then
+      warn "batch install failed; retrying each package individually"
+      for pkg in "${missing[@]}"; do
+        APT install -y --no-install-recommends "$pkg" || warn "could not install $pkg"
+      done
+    fi
+    hash -r
+  else
+    log "All apt packages already present"
+  fi
+else
+  warn "apt-get not found; skipping system package install"
+fi
+
+# Debian/Ubuntu install fd as `fdfind`; expose the conventional `fd` name.
+# ~/.local/bin is on PATH via .zshrc and lives in the persisted $HOME.
+mkdir -p "$HOME/.local/bin"
+if command -v fdfind >/dev/null 2>&1 && ! command -v fd >/dev/null 2>&1; then
+  if ln -sf "$(command -v fdfind)" "$HOME/.local/bin/fd"; then log "linked fd -> fdfind"; fi
+fi
+
+# ---------------------------------------------------------------------------
+# 2. fastfetch -- .zshrc runs it on EVERY shell start, so it must exist.
+#    Try plain apt; if this Ubuntu release lacks it, add the official PPA
+#    (still apt, no tarball). Kept out of the step-1 batch so a missing
+#    candidate can't block the other packages.
+# ---------------------------------------------------------------------------
+install_fastfetch() {
+  if command -v fastfetch >/dev/null 2>&1; then log "fastfetch present"; return 0; fi
+  if ! command -v apt-get >/dev/null 2>&1; then warn "no apt-get; cannot install fastfetch"; return 0; fi
+
+  log "Installing fastfetch via apt"
+  APT install -y fastfetch || true
+  hash -r
+  if command -v fastfetch >/dev/null 2>&1; then return 0; fi
+
+  warn "fastfetch not in this release's apt; adding the official PPA"
+  APT install -y software-properties-common || warn "software-properties-common install failed"
+  sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch || warn "could not add fastfetch PPA"
+  APT update -y || warn "apt-get update (PPA) failed"
+  APT install -y fastfetch || warn "fastfetch install failed (shell banner will error until fixed)"
+  hash -r
+}
+install_fastfetch || warn "fastfetch step errored (continuing)"
+
+# ---------------------------------------------------------------------------
+# 3. oh-my-zsh -- the framework .zshrc sources (theme `norm`, plugins=(git)).
+#    No apt package exists on Ubuntu, so clone into ~/.oh-my-zsh (persisted
+#    $HOME; matches the fallback path in .zshrc). .zshrc auto-updates it.
+# ---------------------------------------------------------------------------
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  log "Cloning oh-my-zsh (no apt package exists on Ubuntu)"
+  git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$HOME/.oh-my-zsh" \
+    || warn "oh-my-zsh clone failed"
+else
+  log "oh-my-zsh present"
+fi
+
+# ---------------------------------------------------------------------------
+# 4. Symlink configs into $HOME with GNU Stow (Coder won't auto-symlink when a
+#    script is present). We stow zsh, fastfetch, and kitty; the Wayland/desktop
+#    packages (dwl, swaylock, img) are intentionally skipped -- there is no
+#    display server here (the kitty config is harmless without the GUI, and is
+#    there if you ever run kitty or want it for reference).
+#
+#    --adopt + `git restore` is this repo's established pattern (see
+#    scripts/*_dotfiles.sh): --adopt absorbs any pre-existing real file so stow
+#    doesn't error on it, then `git restore` reverts the repo copy so the
+#    committed config wins and the symlink points at it. -t "$HOME" is REQUIRED
+#    here because the repo is not directly in $HOME (stow's default target would
+#    be ~/.config/coderv2). The restore is scoped to the stowed packages.
+# ---------------------------------------------------------------------------
+if command -v stow >/dev/null 2>&1; then
+  log "Stowing configs into $HOME"
+  cd "$REPO_ROOT"
+  stow --adopt -t "$HOME" zsh fastfetch kitty || warn "stow failed"
+  git restore -- zsh fastfetch kitty 2>/dev/null \
+    || git checkout -- zsh fastfetch kitty 2>/dev/null \
+    || warn "could not revert stow --adopt changes (repo copy may be modified)"
+else
+  warn "stow not installed; configs were NOT symlinked"
+fi
+
+# ---------------------------------------------------------------------------
+# 5. Default login shell -> zsh (guarded; /etc is ephemeral so this re-runs).
+# ---------------------------------------------------------------------------
+ZSH_BIN="$(command -v zsh || true)"
+if [ -n "$ZSH_BIN" ]; then
+  # chsh (as root, via sudo) needs the shell listed in /etc/shells.
+  grep -qxF "$ZSH_BIN" /etc/shells 2>/dev/null \
+    || echo "$ZSH_BIN" | sudo tee -a /etc/shells >/dev/null \
+    || warn "could not add $ZSH_BIN to /etc/shells"
+  current_shell="$(getent passwd "$WHOAMI" | cut -d: -f7)"
+  if [ "$current_shell" != "$ZSH_BIN" ]; then
+    log "Setting login shell to $ZSH_BIN"
+    sudo chsh -s "$ZSH_BIN" "$WHOAMI" || warn "chsh failed"
+  else
+    log "Login shell already zsh"
+  fi
+else
+  warn "zsh not found; cannot set default shell"
+fi
+
+log "Bootstrap complete. Open a NEW terminal to land in zsh with your config."
+exit 0
