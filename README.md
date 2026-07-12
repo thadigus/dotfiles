@@ -3,9 +3,7 @@
 This is a typical dotfiles folder for the various configurations that I do in my installations. This will include almost any special configs or ricing I do in any Linux installs, but it will mainly focus on my Arch installs which utilize Hyprland, Kitty, Tmux, Zsh, and Neovim. All packages are managed with GNU Stow, so be sure to have this installed.
 
 > [!NOTE]
-> **Canonical source:** This repository lives on our self-hosted (not public) Forgejo 
-> instance at **`git.turnerservices.cloud`**. Public mirrors on **GitHub**, **GitLab**, 
-> and **Codeberg** are *planned* and will be **read-only**.
+> **Canonical source:** This repository lives on our self-hosted (not public) Forgejo instance at **`git.turnerservices.cloud`**. Public mirrors on **GitHub**, **GitLab**, and **Codeberg** are **read-only**.
 
 ## Ansible Pull
 
