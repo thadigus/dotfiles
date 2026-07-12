@@ -21,12 +21,9 @@ From the Arch installation ISO, once a network connection and git are available,
 curl -fsSL https://git.turnerservices.cloud/thadigus/dotfiles/raw/branch/main/scripts/arch_install.sh | bash
 ```
 
-## Support
-Any support/questions or ideas can be addressed on the [Issues Page](https://git.turnerservices.cloud/thadigus/dotfiles/issues).
-
 ## Contributing
-This is mainly a repo for my personal configuration tracking and some examples I can give on my [blog](https://turnerservices.cloud/). I'm open to ideas and suggestions but this is mostly a repo I am providing publicly in case someone wants to see an example of something I've done.
+This is mainly a repo for my personal configuration tracking and some examples I can give on my [blog](https://thadturner.com/).
 
 ## Authors and acknowledgment
 
-### [Thad Turner](https://turnerservices.cloud/) - Cybersecurity Practitioner
+### [Thad Turner](https://thadturner.com/) - Cybersecurity Practitioner
