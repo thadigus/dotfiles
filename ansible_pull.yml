@@ -1,7 +1,7 @@
 # Ansible Pull Playbook for Deploying My Workstations
 #
-# First run (fresh install): ansible-pull -K -U https://github.com/thadigus/dotfiles ansible_pull.yml
-# Subsequent runs:           ansible-pull -U https://github.com/thadigus/dotfiles ansible_pull.yml
+# First run (fresh install): ansible-pull -K -U https://git.turnerservices.cloud/thadigus/dotfiles ansible_pull.yml
+# Subsequent runs:           ansible-pull -U https://git.turnerservices.cloud/thadigus/dotfiles ansible_pull.yml
 
 ---
 
@@ -13,7 +13,7 @@
   tasks:
     - name: Clone dotfiles repo to home
       git:
-        repo: git@github.com:thadigus/dotfiles.git
+        repo: https://git.turnerservices.cloud/thadigus/dotfiles.git
         dest: "{{ dotfiles_dir }}"
         update: true
     # ── Arch Linux ──────────────────────────────────────────────
