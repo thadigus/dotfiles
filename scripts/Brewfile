@@ -1,7 +1,5 @@
 # This is a simple Brewfile for all of the packages I like to keep for my MacOS installs
 
-tap "hashicorp/tap"
-
 # Brew Apps
 brew "ansible"
 brew "python"
@@ -15,20 +13,18 @@ brew "stow"
 brew "socktainer"
 brew "docker"
 brew "tree"
-brew "hashicorp/tap/packer"
 
 # Casks (GUI Apps)
 cask "ghostty"
 cask "vscodium"
 cask "powershell"
 cask "spotify"
-cask "wifiman"
 cask "ultimaker-cura"
 cask "container"
-cask "wireshark-app"
 
 # Stuff I'm forced to have for work...
 cask "visual-studio-code"
 cask "postman"
 cask "1password"
 cask "logi-options+"
+cask "wireshark-app"
