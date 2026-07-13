@@ -15,10 +15,13 @@ brew "docker"
 brew "docker-compose"
 brew "docker-buildx"
 brew "docker-credential-helper"
+brew "libvirt", restart_service: :changed
 brew "tree"
 brew "uv"
 brew "socat"
 brew "gh"
+brew "spice-gtk"
+brew "pkg-config"
 
 # Casks (GUI Apps)
 cask "ghostty"
