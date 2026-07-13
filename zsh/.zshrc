@@ -69,3 +69,4 @@ fi
 
 fastfetch -c ~/.config/neofetch.jsonc
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.devcontainers/bin:$PATH"
