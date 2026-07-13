@@ -13,6 +13,8 @@ brew "stow"
 brew "socktainer"
 brew "docker"
 brew "tree"
+brew "uv"
+brew "socat"
 
 # Casks (GUI Apps)
 cask "ghostty"

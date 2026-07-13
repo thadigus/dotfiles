@@ -16,6 +16,13 @@
     executable: /bin/bash
   failed_when: false
 
+- name: macOS - Install/upgrade mlx-lm (uv tool)
+  shell: uv tool install --upgrade mlx-lm
+  args:
+    executable: /bin/bash
+  environment:
+    PATH: "/opt/homebrew/bin:{{ user_home }}/.local/bin:{{ ansible_env.PATH }}"
+
 - name: macOS - Apply dotfiles via stow
   shell: |
     set -euo pipefail
@@ -39,5 +46,24 @@
   shell: |
     launchctl bootout "gui/$(id -u)/com.thadigus.dotfiles-update" 2>/dev/null || true
     launchctl bootstrap "gui/$(id -u)" "{{ user_home }}/Library/LaunchAgents/com.thadigus.dotfiles-update.plist"
+  args:
+    executable: /bin/bash
+
+- name: macOS - Install mlx-server LaunchAgent
+  template:
+    src: mlx-server.plist.j2
+    dest: "{{ user_home }}/Library/LaunchAgents/com.thadigus.mlx-server.plist"
+
+- name: macOS - Install mlx-bridge LaunchAgent
+  template:
+    src: mlx-bridge.plist.j2
+    dest: "{{ user_home }}/Library/LaunchAgents/com.thadigus.mlx-bridge.plist"
+
+- name: macOS - Load mlx-server and mlx-bridge LaunchAgents
+  shell: |
+    for a in com.thadigus.mlx-server com.thadigus.mlx-bridge; do
+      launchctl bootout "gui/$(id -u)/$a" 2>/dev/null || true
+      launchctl bootstrap "gui/$(id -u)" "{{ user_home }}/Library/LaunchAgents/$a.plist"
+    done
   args:
     executable: /bin/bash

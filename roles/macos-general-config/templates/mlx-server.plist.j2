@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.thadigus.mlx-server</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ user_home }}/.local/bin/mlx_lm.server</string>
+        <string>--model</string>
+        <string>{{ mlx_model }}</string>
+        <string>--host</string>
+        <string>127.0.0.1</string>
+        <string>--port</string>
+        <string>{{ mlx_port }}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>{{ user_home }}/Library/Logs/mlx-server.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ user_home }}/Library/Logs/mlx-server.log</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>{{ user_home }}/.local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>
