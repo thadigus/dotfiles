@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.thadigus.colima</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>{{ dotfiles_dir }}/scripts/colima_up.sh</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>{{ user_home }}/Library/Logs/colima.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ user_home }}/Library/Logs/colima.log</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>COLIMA_CPU</key>
+        <string>{{ colima_cpu }}</string>
+        <key>COLIMA_MEMORY</key>
+        <string>{{ colima_memory }}</string>
+        <key>COLIMA_DISK</key>
+        <string>{{ colima_disk }}</string>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>

@@ -3,3 +3,7 @@ mlx_wg_prefix: "10.0.6."
 mlx_models:
   default: "mlx-community/Qwen3-4B-Instruct-2507-4bit"
 mlx_model: "{{ mlx_models[ansible_facts['hostname']] | default(mlx_models['default']) }}"
+
+colima_cpu: 4
+colima_memory: 8
+colima_disk: 100

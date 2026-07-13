@@ -67,3 +67,23 @@
     done
   args:
     executable: /bin/bash
+
+- name: macOS - Wire docker compose/buildx CLI plugins
+  shell: |
+    mkdir -p "{{ user_home }}/.docker/cli-plugins"
+    ln -sf /opt/homebrew/lib/docker/cli-plugins/docker-compose "{{ user_home }}/.docker/cli-plugins/docker-compose"
+    ln -sf /opt/homebrew/lib/docker/cli-plugins/docker-buildx "{{ user_home }}/.docker/cli-plugins/docker-buildx"
+  args:
+    executable: /bin/bash
+
+- name: macOS - Install colima LaunchAgent
+  template:
+    src: colima.plist.j2
+    dest: "{{ user_home }}/Library/LaunchAgents/com.thadigus.colima.plist"
+
+- name: macOS - Load colima LaunchAgent
+  shell: |
+    launchctl bootout "gui/$(id -u)/com.thadigus.colima" 2>/dev/null || true
+    launchctl bootstrap "gui/$(id -u)" "{{ user_home }}/Library/LaunchAgents/com.thadigus.colima.plist"
+  args:
+    executable: /bin/bash
