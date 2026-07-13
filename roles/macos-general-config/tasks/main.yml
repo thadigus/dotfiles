@@ -14,6 +14,7 @@
   shell: brew bundle cleanup --force --file "{{ dotfiles_dir }}/scripts/Brewfile"
   args:
     executable: /bin/bash
+  failed_when: false
 
 - name: macOS - Apply dotfiles via stow
   shell: |
