@@ -18,6 +18,7 @@ brew "docker-credential-helper"
 brew "tree"
 brew "uv"
 brew "socat"
+brew "gh"
 
 # Casks (GUI Apps)
 cask "ghostty"
