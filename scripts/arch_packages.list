@@ -33,7 +33,7 @@ dolphin
 
 # Personal Utilities
 neovim
-kitty
+ghostty
 tmux
 zsh
 oh-my-zsh-git

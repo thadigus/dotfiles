@@ -10,7 +10,33 @@
   args:
     executable: /bin/bash
 
+- name: macOS - Remove Brew packages not in the Brewfile
+  shell: brew bundle cleanup --force --file "{{ dotfiles_dir }}/scripts/Brewfile"
+  args:
+    executable: /bin/bash
+
 - name: macOS - Apply dotfiles via stow
-  shell: "{{ dotfiles_dir }}/scripts/macos_dotfiles.sh"
+  shell: |
+    set -euo pipefail
+    cd "{{ dotfiles_dir }}"
+    stow --adopt ghostty tmux fastfetch zsh
+    git restore .
+  args:
+    executable: /bin/bash
+
+- name: macOS - Ensure LaunchAgents directory exists
+  file:
+    path: "{{ user_home }}/Library/LaunchAgents"
+    state: directory
+
+- name: macOS - Install dotfiles-update LaunchAgent
+  template:
+    src: dotfiles-update.plist.j2
+    dest: "{{ user_home }}/Library/LaunchAgents/com.thadigus.dotfiles-update.plist"
+
+- name: macOS - Load dotfiles-update LaunchAgent
+  shell: |
+    launchctl bootout "gui/$(id -u)/com.thadigus.dotfiles-update" 2>/dev/null || true
+    launchctl bootstrap "gui/$(id -u)" "{{ user_home }}/Library/LaunchAgents/com.thadigus.dotfiles-update.plist"
   args:
     executable: /bin/bash

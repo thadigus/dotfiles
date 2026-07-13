@@ -46,7 +46,7 @@
   cron:
     name: Update Dotfiles on Reboot
     special_time: reboot
-    job: "{{ dotfiles_dir }}/scripts/arch_logon.sh"
+    job: "ansible-pull -U https://git.turnerservices.cloud/thadigus/dotfiles.git ansible_pull.yml"
 
 - name: Set Shell to Zsh
   become: true
@@ -61,7 +61,11 @@
     update: true
 
 - name: Arch - Apply dotfiles via stow
-  shell: "{{ dotfiles_dir }}/scripts/arch_dotfiles.sh"
+  shell: |
+    set -euo pipefail
+    cd "{{ dotfiles_dir }}"
+    stow --adopt ghostty tmux fastfetch zsh dwl swaylock img
+    git restore .
   args:
     executable: /bin/bash
 
