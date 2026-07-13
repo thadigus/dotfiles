@@ -21,7 +21,7 @@
   args:
     executable: /bin/bash
   environment:
-    PATH: "/opt/homebrew/bin:{{ user_home }}/.local/bin:{{ ansible_env.PATH }}"
+    PATH: "/opt/homebrew/bin:{{ user_home }}/.local/bin:{{ ansible_facts['env']['PATH'] }}"
 
 - name: macOS - Apply dotfiles via stow
   shell: |

@@ -2,4 +2,4 @@ mlx_port: 8080
 mlx_wg_prefix: "10.0.6."
 mlx_models:
   default: "mlx-community/Qwen3-4B-Instruct-2507-4bit"
-mlx_model: "{{ mlx_models[ansible_hostname] | default(mlx_models['default']) }}"
+mlx_model: "{{ mlx_models[ansible_facts['hostname']] | default(mlx_models['default']) }}"

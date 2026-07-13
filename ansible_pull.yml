@@ -20,11 +20,11 @@
     - name: arch-dotfiles-dwl Role
       include_role:
         name: arch-dotfiles-dwl
-      when: ansible_distribution in ["Archlinux", "Artix Linux"]
+      when: ansible_facts['distribution'] in ["Archlinux", "Artix Linux"]
     - name: arch-tuigreetd Role
       include_role:
         name: arch-tuigreetd
-      when: ansible_distribution in ["Archlinux", "Artix Linux"]
+      when: ansible_facts['distribution'] in ["Archlinux", "Artix Linux"]
     # ── macOS ───────────────────────────────────────────────────
     - name: macOS General Config Role
       include_role:
