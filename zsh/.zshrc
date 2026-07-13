@@ -50,7 +50,7 @@ source $ZSH/oh-my-zsh.sh
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
 else
-  export EDITOR='mvim'
+  export EDITOR='nvim'
 fi
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
@@ -63,9 +63,9 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 
-#if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
-#  exec tmux
-#fi
+if command -v tmux &>/dev/null && [ -z "$TMUX" ] && [[ -o interactive ]] && [ "$TERM_PROGRAM" != "vscode" ]; then
+  exec tmux new-session -A -s main
+fi
 
 fastfetch -c ~/.config/neofetch.jsonc
 export PATH="$HOME/.local/bin:$PATH"

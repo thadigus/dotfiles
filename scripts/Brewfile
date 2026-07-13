@@ -13,7 +13,7 @@ brew "socktainer"
 brew "docker"
 
 # Casks (GUI Apps)
-cask "kitty"
+cask "ghostty"
 cask "vscodium"
 cask "powershell"
 cask "spotify"
