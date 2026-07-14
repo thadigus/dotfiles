@@ -16,6 +16,7 @@ brew "docker-compose"
 brew "docker-buildx"
 brew "docker-credential-helper"
 brew "libvirt", restart_service: :changed
+brew "qemu"
 brew "tree"
 brew "uv"
 brew "socat"
