@@ -8,6 +8,7 @@ nixos-generate-config --no-filesystems --show-hardware-config >"hosts/$h/hardwar
 git add -A
 read -rsp 'LUKS passphrase: ' p </dev/tty; echo; printf %s "$p" >/tmp/disko-password
 nix run github:nix-community/disko/latest -- --mode destroy,format,mount --flake ".#$h" --yes-wipe-all-disks
+PASSWORD=$(cat /tmp/disko-password) systemd-cryptenroll --fido2-device=auto "$(cryptsetup status cryptvg | awk '/device:/{print $2}')" </dev/tty || echo "no yubikey - skipped fido2 enroll"
 nix run nixpkgs#sbctl -- create-keys
 mkdir -p /mnt/var/lib && cp -a /var/lib/sbctl /mnt/var/lib/
 nix run nixpkgs#sbctl -- enroll-keys -m || echo "firmware not in setup mode - failed sbctl enroll-keys -m"
