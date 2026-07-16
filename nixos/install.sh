@@ -8,5 +8,5 @@ nixos-generate-config --no-filesystems --show-hardware-config >"hosts/$h/hardwar
 git add -A
 read -rsp 'LUKS passphrase: ' p </dev/tty; echo; printf %s "$p" >/tmp/disko-password
 nix run github:nix-community/disko/latest -- --mode destroy,format,mount --flake ".#$h" --yes-wipe-all-disks
-nixos-install --flake ".#$h"
-nixos-enter --root /mnt -c 'passwd thadigus'
+nixos-install --flake ".#$h" --no-root-passwd
+nixos-enter --root /mnt -c 'passwd thadigus' </dev/tty
