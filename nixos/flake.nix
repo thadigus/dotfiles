@@ -2,12 +2,14 @@
   description = "Thad's NixOS Config";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+    lanzaboote.url = "github:nix-community/lanzaboote/v1.1.0";
+    lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, disko, ... }:
+  outputs = { self, nixpkgs, disko, lanzaboote, ... }:
     let
       mkHost = hostName: swapSize: extraModules:
         nixpkgs.lib.nixosSystem {
@@ -21,7 +23,7 @@
         };
     in {
       nixosConfigurations = {
-        nixlaptop = mkHost "nixlaptop" "32G" [ ./hosts/nixlaptop ];
+        nixlaptop = mkHost "nixlaptop" "32G" [ ./hosts/nixlaptop lanzaboote.nixosModules.lanzaboote ];
         nixwhitebox = mkHost "nixwhitebox" "32G" [ ./hosts/nixwhitebox ];
       };
     };

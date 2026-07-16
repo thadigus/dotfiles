@@ -6,7 +6,9 @@
     ./home.nix
   ];
 
+  system.stateVersion = "25.05";
   boot.initrd.systemd.enable = true;
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   time.timeZone = "America/Indiana/Indianapolis";
   users.mutableUsers = true;
