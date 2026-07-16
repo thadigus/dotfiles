@@ -10,5 +10,6 @@ read -rsp 'LUKS passphrase: ' p </dev/tty; echo; printf %s "$p" >/tmp/disko-pass
 nix run github:nix-community/disko/latest -- --mode destroy,format,mount --flake ".#$h" --yes-wipe-all-disks
 nix run nixpkgs#sbctl -- create-keys
 mkdir -p /mnt/var/lib && cp -a /var/lib/sbctl /mnt/var/lib/
+nix run nixpkgs#sbctl -- enroll-keys -m || echo "firmware not in setup mode - failed sbctl enroll-keys -m"
 nixos-install --flake ".#$h" --no-root-passwd
 nixos-enter --root /mnt -c 'passwd thadigus' </dev/tty
