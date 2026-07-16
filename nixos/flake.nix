@@ -9,11 +9,11 @@
 
   outputs = { self, nixpkgs, disko, ... }:
     let
-      mkHost = hostName: extraModules:
+      mkHost = hostName: swapSize: extraModules:
         nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit hostName; };          
-	  modules = [
+          specialArgs = { inherit hostName swapSize; };
+          modules = [
             disko.nixosModules.disko
             ./configuration.nix
             { networking.hostName = hostName; }
@@ -21,8 +21,8 @@
         };
     in {
       nixosConfigurations = {
-        nixlaptop   = mkHost "nixlaptop"   [ ./hosts/nixlaptop ];
-        nixwhitebox = mkHost "nixwhitebox" [ ./hosts/whitebox ];
+        nixlaptop = mkHost "nixlaptop" "32G" [ ./hosts/nixlaptop ];
+        nixwhitebox = mkHost "nixwhitebox" "32G" [ ./hosts/nixwhitebox ];
       };
     };
 }
