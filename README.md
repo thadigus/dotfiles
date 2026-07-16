@@ -13,6 +13,14 @@ I've created an Ansible Pull playbook to deploy this repo on Arch boxes and MacO
 ansible-pull -U https://git.turnerservices.cloud/thadigus/dotfiles ansible_pull.yml -K
 ```
 
+## NixOS Install Script - ISO -> Full Config
+
+From the NixOS minimal installation ISO you can run the following command to install from scratch and end up with a fully configured endpoint.
+
+```shell
+curl -fsSL https://git.turnerservices.cloud/thadigus/dotfiles/raw/branch/main/nixos/install.sh | sudo bash
+```
+
 ## Arch Install Script - ISO Install
 
 From the Arch installation ISO, once a network connection and git are available, the following command can be ran to automate the installation process of Arch for my specific needs.
