@@ -8,6 +8,7 @@
     swaylock swayidle swaybg
     brightnessctl
     ghostty neovim
+    fastfetch oh-my-zsh
     htop pciutils
     (pkgs.dwl.override {
       configH = ../dwl/.dwl/config.h;
