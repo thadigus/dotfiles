@@ -14,6 +14,17 @@
     enable = true;
     pkiBundle = "/var/lib/sbctl";
   };
+
   hardware.graphics.extraPackages = [ pkgs.intel-media-driver ];
-  hardware.nvidia.offload.enableOffloadCmd = true;
+  hardware.nvidia = {
+    modesetting.enable = true;
+    open = true;
+    nvidiaSettings = true;
+    prime = {
+      offload.enable = true;
+      offload.enableoffloadCmd = true;
+      intelBusId  = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+    }
+  }
 }
