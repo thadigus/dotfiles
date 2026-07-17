@@ -34,7 +34,7 @@
   };
   programs.git = {
     enable = true;
-    userName: "thadigus";
+    userName = "thadigus";
     userEmail = "no-reply@turnerservices.cloud";
     extraConfig = {
       init.defaultBranch = "main";
