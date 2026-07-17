@@ -32,6 +32,13 @@
     initContent = builtins.readFile ../zsh/.zshrc;
     oh-my-zsh = {
       enable = true;
+      theme = "norm";
+      plugins = [ "git" ];
+      extraConfig = ''
+        ENABLE_CORRECTION="true"
+        COMPLETION_WAITING_DOTS="true"
+        HIST_STAMPS="mm/dd/yyyy"
+      '';
     };
   };
   programs.tmux = {

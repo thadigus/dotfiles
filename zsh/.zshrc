@@ -2,10 +2,12 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-if [[ -f "/usr/share/oh-my-zsh/oh-my-zsh.sh" ]]; then
-  export ZSH="/usr/share/oh-my-zsh"
-else
-  export ZSH="$HOME/.oh-my-zsh"
+if [[ -z "${ZSH:-}" ]]; then
+  if [[ -f "/usr/share/oh-my-zsh/oh-my-zsh.sh" ]]; then
+    export ZSH="/usr/share/oh-my-zsh"
+  else
+    export ZSH="$HOME/.oh-my-zsh"
+  fi
 fi
 
 ZSH_THEME="norm"
@@ -42,7 +44,7 @@ HIST_STAMPS="mm/dd/yyyy"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
 
-source $ZSH/oh-my-zsh.sh
+[[ -f "$ZSH/oh-my-zsh.sh" ]] && (( ! ${+functions[omz]} )) && source "$ZSH/oh-my-zsh.sh"
 
 # User configuration
 
