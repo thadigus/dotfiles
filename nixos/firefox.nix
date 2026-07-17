@@ -37,7 +37,15 @@
 	  installation_mode = "force_installed";
 	};
       };
+
+      Homepage = {
+        URL = "https://home.turnerservices.cloud/";
+        StartPage = "homepage";
+        Locked = false;
+      };
+      NewTabPage = false;
     };
+
     profiles.default = {
       id = 0;
       settings = {
