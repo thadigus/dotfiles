@@ -1,5 +1,7 @@
 { pkgs, ... }:
 {
+  imports = [ ./firefox.nix ];
+
   home.stateVersion = "25.05";
 
   # home.packages is for all NixOS packages without home manager support, or without special config
@@ -46,39 +48,5 @@
       push.autoSetupRemote = true;
     };
   };
-  programs.firefox = {
-    enable = true;
-    languagePacks = [ "en-US" ];
-    policies = {
-      AppAutoUpdate = false;
-      BackgroundAppUpdate = false;
-      DisableFirefoxStudies = true;
-      DisableProfileIMport = true;
-      DisablePocket = true;
-      DisableTelemetry = true;
-      DisableFormHistory = true;
-      
-      DisplayMenuBar = "never";
-      DontCheckDefaultBrowser = true;
-      HardwareAcceleration = true;
-      OfferToSaveLogins = false;
 
-      ExtensionSettings = let
-        moz = short: "https://addons.mozilla.org/firefox/downloads/latest/${short}/latest.xpi";
-      in {
-        "*".installation_mode = "blocked";
-
-        "uBlock0@raymondhill.net" = {
-          install_url       = moz "ublock-origin";
-          installation_mode = "force_installed";
-          updates_disabled  = true;
-        };
-      };
-    };
-    profiles.default.search = {
-    force           = true;
-    default         = "DuckDuckGo";
-    privateDefault  = "DuckDuckGo";
-    };
-  };
 }
