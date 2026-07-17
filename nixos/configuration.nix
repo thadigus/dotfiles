@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 let
   dwlStart = pkgs.writeShellScript "dwl-start" ''
-    ${pkgs.wbg}/bin/wbg ${../img/.config/desktopwallpaper.png} &
+    ${pkgs.swaybg}/bin/swaybg -m fill -i ${../img/.config/desktopwallpaper.png} &
   '';
 
 in
