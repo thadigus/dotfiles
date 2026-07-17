@@ -7,6 +7,7 @@
 
   system.stateVersion = "25.05";
   boot.initrd.systemd.enable = true;
+  hardware.graphics.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   networking.networkmanager = {
