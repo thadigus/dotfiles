@@ -17,6 +17,8 @@
 
   hardware.graphics.extraPackages = [ pkgs.intel-media-driver ];
   hardware.nvidia = {
+    powerManagement.enable = true; # Suspend/resume support for Nvidia
+    powerManagement.finegrained = true; # Powers off GPU when no offload
     modesetting.enable = true;
     open = true;
     nvidiaSettings = true;
@@ -28,4 +30,6 @@
     };
   };
   services.xserver.videoDrivers = [ "nvidia" ];
+  services.tlp.enable = true; # tlp power management daemon, just does battery/power management for the laptop
+  services.thermald.enable = true; # Intel thermal daemon - helps with thermal throttling
 }
