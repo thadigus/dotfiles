@@ -3,7 +3,6 @@
 {
   imports = [
     ./bootloader.nix
-    ./home.nix
   ];
 
   system.stateVersion = "25.05";
