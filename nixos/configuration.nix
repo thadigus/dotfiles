@@ -1,5 +1,10 @@
 { config, pkgs, ... }:
+let
+  dwlStart = pkgs.writeShellScript "dwl-start" ''
+    ${pkgs.wbg}/bin/wbg ${../img/.config/desktopwallpaper.png} &
+  '';
 
+in
 {
   imports = [
     ./bootloader.nix
@@ -32,7 +37,7 @@
   services.greetd = {
     enable = true;
     settings.default_session = {
-      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd \"dwl -s 'wbg $HOME/.config/desktopwallpaper.png'\"";
+      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'dwl -s ${dwlStart}'";
       user = "greeter";
     };
   };
