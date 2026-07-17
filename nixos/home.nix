@@ -7,7 +7,7 @@
     wl-clipboard grim slurp
     swaylock swayidle wbg
     brightnessctl
-    ghostty
+    ghostty neovim
     htop pciutils
     (pkgs.dwl.override {
       configH = ../dwl/.dwl/config.h;
@@ -15,7 +15,7 @@
     })
   ];
   # dotfiles for the raw packages
-  xdg.configFile."ghostty".source = ../ghostty/.config/ghostty;
+  xdg.configFile."ghostty/config".source = ../ghostty/.config/ghostty/config;
   xdg.configFile."neofetch.jsonc".source = ../fastfetch/.config/neofetch.jsonc;
   xdg.configFile."swaylock/config".source = ../swaylock/.swaylock/config;
   # Desktop and profile images
