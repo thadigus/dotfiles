@@ -27,4 +27,5 @@
       nvidiaBusId = "PCI:1:0:0";
     };
   };
+  services.xserver.videoDrivers = [ "nvidia" ];
 }
