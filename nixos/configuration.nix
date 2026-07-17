@@ -9,10 +9,14 @@
   boot.initrd.systemd.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  networking.networkmanager = {
+    enable = true;
+    wifi.powersave = true;
+  };
   time.timeZone = "America/Indiana/Indianapolis";
   users.mutableUsers = true;
   users.users.thadigus = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "networkmanager" ];
   };
 }
