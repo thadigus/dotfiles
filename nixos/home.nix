@@ -11,6 +11,7 @@
     brightnessctl
     ghostty neovim
     fastfetch oh-my-zsh
+    nextcloud-client
     htop pciutils
     (pkgs.dwl.override {
       configH = ../dwl/.dwl/config.h;
@@ -56,4 +57,8 @@
     };
   };
 
+  services.nextcloud-client = {
+    enable = true;
+    startInBackground = true;
+  };
 }
