@@ -34,5 +34,11 @@
   };
   programs.git = {
     enable = true;
+    userName: "thadigus";
+    userEmail = "no-reply@turnerservices.cloud";
+    extraConfig = {
+      init.defaultBranch = "main";
+      pull.rebase = true;
+      push.autoSetupRemote = true;
   };
 }
