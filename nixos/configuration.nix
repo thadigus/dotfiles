@@ -2,9 +2,8 @@
 let
   dwlStart = pkgs.writeShellScript "dwl-start" ''
     ${pkgs.swaybg}/bin/swaybg -m fill -i ${../img/.config/desktopwallpaper.png} &
-    ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
-    ${pkgs.systemd}/bin/systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
-    ${pkgs.systemd}/bin/systemctl --user start graphical-session.target &
+    ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+    ${pkgs.systemd}/bin/systemctl --user start dwl-session.target
   '';
 
 in

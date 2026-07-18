@@ -57,6 +57,15 @@
     };
   };
 
+  systemd.user.targets.dwl-session = {
+    Unit = {
+      Description = "dwl Compositor Session";
+      BindsTo = [ "graphical-session.target" ];
+      Wants = [ "graphical-session-pre.target" ];
+      After = [ "graphical-session-pre.target" ];
+    };
+  };
+
   services.nextcloud-client = {
     enable = true;
     startInBackground = true;
