@@ -162,7 +162,8 @@
         "disko": "disko",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "zen-browser": "zen-browser"
       }
     },
     "rust-overlay": {
@@ -184,6 +185,26 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "type": "github"
+      }
+    },
+    "zen-browser": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1784494537,
+        "narHash": "sha256-KLK9B1vSPU3dzyH4w6fhRDGLY3y8WSWNKnQerot08h8=",
+        "ref": "refs/heads/main",
+        "rev": "b67b2ac27e5cc84893ba050c436a7e96a38a7e9f",
+        "revCount": 5,
+        "type": "git",
+        "url": "https://git.turnerservices.cloud/thadigus/zen-browser-flake"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.turnerservices.cloud/thadigus/zen-browser-flake"
       }
     }
   },
