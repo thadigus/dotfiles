@@ -9,9 +9,11 @@
     lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-26.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    zen-browser.url = "git+https://git.turnerservices.cloud/thadigus/zen-browser-flake";
+    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, disko, lanzaboote, home-manager, ... }:
+  outputs = { self, nixpkgs, disko, lanzaboote, home-manager, zen-browser, ... }:
     let
       mkHost = hostName: swapSize: extraModules:
         nixpkgs.lib.nixosSystem {
@@ -20,6 +22,7 @@
           modules = [
             disko.nixosModules.disko
             home-manager.nixosModules.home-manager
+	    { nixpkgs.overlays = [ zen-browser.overlays.default ]; }
             ./nixos/configuration.nix
             {
               networking.hostName = hostName;

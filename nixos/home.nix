@@ -13,6 +13,7 @@
     fastfetch oh-my-zsh
     nextcloud-client
     htop pciutils
+    zen-browser
     (pkgs.dwl.override {
       configH = ../dwl/.dwl/config.h;
       withCustomConfigH = true;
