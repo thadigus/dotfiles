@@ -70,5 +70,7 @@ if command -v tmux &>/dev/null && [ -z "$TMUX" ] && [[ -o interactive ]] && [ "$
 fi
 
 fastfetch -c ~/.config/neofetch.jsonc
+export NEWT_COLORS="root=#000000,#212733 roottext=#d9d7ce,#d4d8df border=#686868,#212733 window=#d9d7ce,#212733 shadow=#686868,#191e2a title=#000000,#d4d8df label=#000000,#d4d8df button=#d9d7ce,#212733 actbutton=#191e2a,#6dcbfa compactbutton=#000000,#d4d8df checkbox=#bae67e,#212733 actcheckbox=#191e2a,#bae67e entry=#d9d7ce,#212733 disentry=#686868,#212733 listbox=#d9d7ce,#212733 actlistbox=#191e2a,#6dcbfa sellistbox=#191e2a,#6dcbfa actsellistbox=#191e2a,#fad07b textbox=#d9d7ce,#212733 acttextbox=#191e2a,#73d0ff emptyscale=,#686868 fullscale=,#6dcbfa helpline=#000000,#d4d8df"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.devcontainers/bin:$PATH"
+
