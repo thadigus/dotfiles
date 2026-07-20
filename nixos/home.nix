@@ -8,7 +8,7 @@
   home.packages = with pkgs; [
     wl-clipboard grim slurp
     swaylock swayidle swaybg
-    imagemagick
+    imagemagick satty
     brightnessctl
     ghostty neovim
     fastfetch oh-my-zsh
