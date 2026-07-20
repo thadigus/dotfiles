@@ -15,6 +15,7 @@
     nextcloud-client
     htop pciutils
     zen-browser
+    git-credential-manager
     (pkgs.dwl.override {
       configH = ../dwl/.dwl/config.h;
       withCustomConfigH = true;
@@ -56,6 +57,9 @@
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;
+      credential = { 
+        helper = "store";
+      };
     };
   };
 
