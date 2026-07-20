@@ -7,7 +7,7 @@ DIR="$HOME/.config/swaylock/"
 mkdir -p "$DIR"
 
 # take screenshot
-grim - | convert - -scale 10% -scale 1000% -blur 0x8 "$IMG"
+grim - | magick convert - -scale 10% -scale 1000% -blur 0x8 "$IMG"
 
 # lock screen
 swaylock -i "$IMG"
