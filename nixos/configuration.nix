@@ -51,6 +51,7 @@ in
     pulse.enable = true;
   };
   security.rtkit.enable = true; # enabling realtime scheduling for audio tasks
+  security.pam.services.swaylock = {}; # PAM service so swaylock can authenticate to unlock
 
   # Font packages
   fonts.packages = with pkgs; [ noto-fonts nerd-fonts.jetbrains-mono ];

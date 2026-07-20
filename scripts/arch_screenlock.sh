@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-IMG="$HOME/.swaylock/screenlock.png"
-DIR="$HOME/.swaylock"
+IMG="$HOME/.config/swaylock/screenlock.png"
+DIR="$HOME/.config/swaylock/"
 
 mkdir -p "$DIR"
 
