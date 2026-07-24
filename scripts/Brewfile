@@ -27,7 +27,6 @@ brew "pkg-config"
 # Casks (GUI Apps)
 cask "ghostty"
 cask "vscodium"
-cask "powershell"
 cask "spotify"
 cask "ultimaker-cura"
 
