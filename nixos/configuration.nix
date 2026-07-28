@@ -14,6 +14,10 @@ in
 
   system.stateVersion = "25.05";
   boot.initrd.systemd.enable = true;
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
   hardware.graphics.enable = true;
   hardware.enableRedistributableFirmware = true; # WiFi and GPU firmware updates
   services.fwupd.enable = true; # BIOS and SSD firmware updates

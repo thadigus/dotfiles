@@ -7,7 +7,7 @@
   # home.packages is for all NixOS packages without home manager support, or without special config
   home.packages = with pkgs; [
     wl-clipboard grim slurp
-    wmenu
+    wmenu bluetui
     swaylock swayidle swaybg
     imagemagick satty
     brightnessctl

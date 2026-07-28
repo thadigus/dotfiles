@@ -117,6 +117,10 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 static const char *termcmd[] = { "ghostty", NULL };
 static const char *menucmd[] = { "wmenu-run", NULL };
 
+// Brightness controls with brightnessctl
+static const char *brightup[] = { "brightnessctl", "set", "5%+", NULL };
+static const char *brightdown[] = { "brightnessctl", "set", "5%-", NULL };
+
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: 2 -> at, etc. */
 	/* modifier                  key                  function          argument */
@@ -156,6 +160,9 @@ static const Key keys[] = {
 	TAGKEYS(          XKB_KEY_8, XKB_KEY_asterisk,                      7),
 	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                     8),
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_c,           quit,             {0} },
+	// Screen brightness keys
+	{ 0,    		             XKB_KEY_XF86MonBrightnessUp,     spawn,          {.v = brightup} },
+	{ 0,    		             XKB_KEY_XF86MonBrightnessDown,   spawn,          {.v = brightdown} },
 
 	/* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
 	{ WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_Terminate_Server, quit, {0} },
@@ -172,3 +179,4 @@ static const Button buttons[] = {
 	{ MODKEY, BTN_MIDDLE, togglefloating, {0} },
 	{ MODKEY, BTN_RIGHT,  moveresize,     {.ui = CurResize} },
 };
+
