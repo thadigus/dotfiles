@@ -121,6 +121,11 @@ static const char *menucmd[] = { "wmenu-run", NULL };
 static const char *brightup[] = { "brightnessctl", "set", "5%+", NULL };
 static const char *brightdown[] = { "brightnessctl", "set", "5%-", NULL };
 
+// Volume controls with wpctl
+static const char *volumeup[]   = { "wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", NULL };
+static const char *volumedown[] = { "wpctl", "set-volume", "@DEFAULT_SINK@", "5%-", NULL };
+static const char *mutevolume[] = { "wpctl", "set-volume", "@DEFAULT_SINK@", "0",   NULL };
+
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: 2 -> at, etc. */
 	/* modifier                  key                  function          argument */
@@ -163,6 +168,10 @@ static const Key keys[] = {
 	// Screen brightness keys
 	{ 0,    		             XKB_KEY_XF86MonBrightnessUp,     spawn,          {.v = brightup} },
 	{ 0,    		             XKB_KEY_XF86MonBrightnessDown,   spawn,          {.v = brightdown} },
+	// Volume control keys
+    	{ 0,                         XKB_KEY_XF86AudioRaiseVolume, spawn, {.v = volumeup   } },
+    	{ 0,                         XKB_KEY_XF86AudioLowerVolume, spawn, {.v = volumedown } },
+    	{ 0,                         XKB_KEY_XF86AudioMute, spawn, {.v = mutevolume } },
 
 	/* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
 	{ WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_Terminate_Server, quit, {0} },
