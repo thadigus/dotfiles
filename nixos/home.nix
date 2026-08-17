@@ -17,6 +17,7 @@
     htop pciutils
     zen-browser
     git-credential-manager
+    signal-desktop
     (pkgs.dwl.override {
       configH = ../dwl/.dwl/config.h;
       withCustomConfigH = true;
@@ -52,9 +53,9 @@
   };
   programs.git = {
     enable = true;
-    userName = "thadigus";
-    userEmail = "no-reply@turnerservices.cloud";
-    extraConfig = {
+    settings = {
+      user.name = "thadigus";
+      user.email = "no-reply@turnerservices.cloud";
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;

@@ -20,7 +20,10 @@ in
   };
   hardware.graphics.enable = true;
   hardware.enableRedistributableFirmware = true; # WiFi and GPU firmware updates
-  services.fwupd.enable = true; # BIOS and SSD firmware updates
+  services.fwupd = {
+    enable = true; # BIOS and SSD firmware updates
+    package = pkgs.fwupd;
+  };
   services.fstrim.enable = true; # SSD trimming to clear empty blocks
 
   nixpkgs.config.allowUnfree = true; # eventually move away from Nvidia drivers
@@ -43,7 +46,7 @@ in
   services.greetd = {
     enable = true;
     settings.default_session = {
-      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'dwl -s ${dwlStart}'";
+      command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd 'dwl -s ${dwlStart}'";
       user = "greeter";
     };
   };
