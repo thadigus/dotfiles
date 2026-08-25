@@ -17,7 +17,7 @@
     htop pciutils
     zen-browser
     git-credential-manager
-    signal-desktop
+    signal-desktop protonvpn-gui
     (pkgs.dwl.override {
       configH = ../dwl/.dwl/config.h;
       withCustomConfigH = true;
