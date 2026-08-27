@@ -18,6 +18,7 @@
     git-credential-manager
     signal-desktop proton-vpn
     vlc nextcloud-client
+    docker-compose
     (pkgs.dwl.override {
       configH = ../dwl/.dwl/config.h;
       withCustomConfigH = true;

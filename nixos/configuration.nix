@@ -64,12 +64,22 @@ in
   # Font packages
   fonts.packages = with pkgs; [ noto-fonts nerd-fonts.jetbrains-mono ];
 
+  # Docker
+  virtualisation.docker = {
+    enable = true;
+    autoPrune = {
+      enable = true;
+      dates = "weekly";
+      flags = [ "--filter=until=24h" ];  # prune unused images/containers older than 24h
+    };
+  };
+
   users.mutableUsers = true;
   users.groups.thadigus = {};
   users.users.thadigus = {
     isNormalUser = true;
     group = "thadigus";
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ "wheel" "networkmanager" "docker" ];
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true; # Required for system level zsh shell setting
