@@ -13,11 +13,11 @@
     brightnessctl
     ghostty neovim
     fastfetch oh-my-zsh
-    nextcloud-client
     htop pciutils
     zen-browser
     git-credential-manager
     signal-desktop proton-vpn
+    vlc nextcloud-client
     (pkgs.dwl.override {
       configH = ../dwl/.dwl/config.h;
       withCustomConfigH = true;
@@ -74,8 +74,10 @@
     };
   };
 
+  services.gnome-keyring.enable = true;
   services.nextcloud-client = {
     enable = true;
     startInBackground = true;
+    package = pkgs.nextcloud-client;
   };
 }

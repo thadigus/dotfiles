@@ -58,6 +58,7 @@ in
     pulse.enable = true;
   };
   security.rtkit.enable = true; # enabling realtime scheduling for audio tasks
+  security.pam.services.greetd.enableGnomeKeyring = true; # PAM service to unlock Gnome Keyring upon login
   security.pam.services.swaylock = {}; # PAM service so swaylock can authenticate to unlock
 
   # Font packages
