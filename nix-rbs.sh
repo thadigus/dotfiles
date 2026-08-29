@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/sh
 
 sudo nixos-rebuild switch --flake .#nixlaptop
