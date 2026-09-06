@@ -56,7 +56,7 @@
   programs.git = {
     enable = true;
     settings = {
-      user.name = "thadigus";
+      user.name = "Thad Turner";
       user.email = "no-reply@turnerservices.cloud";
       init.defaultBranch = "main";
       pull.rebase = true;
