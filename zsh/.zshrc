@@ -74,3 +74,5 @@ export NEWT_COLORS="root=#000000,#212733 roottext=#d9d7ce,#d4d8df border=#686868
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.devcontainers/bin:$PATH"
 
+
+[ -f "$HOME/.config/wci/omp-dev.sh" ] && . "$HOME/.config/wci/omp-dev.sh"  # wci omp-dev

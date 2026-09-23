@@ -49,22 +49,15 @@
   args:
     executable: /bin/bash
 
-- name: macOS - Install mlx-server LaunchAgent
-  template:
-    src: mlx-server.plist.j2
-    dest: "{{ user_home }}/Library/LaunchAgents/com.thadigus.mlx-server.plist"
-
 - name: macOS - Install mlx-bridge LaunchAgent
   template:
     src: mlx-bridge.plist.j2
     dest: "{{ user_home }}/Library/LaunchAgents/com.thadigus.mlx-bridge.plist"
 
-- name: macOS - Load mlx-server and mlx-bridge LaunchAgents
+- name: macOS - Load mlx-bridge LaunchAgent
   shell: |
-    for a in com.thadigus.mlx-server com.thadigus.mlx-bridge; do
-      launchctl bootout "gui/$(id -u)/$a" 2>/dev/null || true
-      launchctl bootstrap "gui/$(id -u)" "{{ user_home }}/Library/LaunchAgents/$a.plist"
-    done
+    launchctl bootout "gui/$(id -u)/com.thadigus.mlx-bridge" 2>/dev/null || true
+    launchctl bootstrap "gui/$(id -u)" "{{ user_home }}/Library/LaunchAgents/com.thadigus.mlx-bridge.plist"
   args:
     executable: /bin/bash
 
