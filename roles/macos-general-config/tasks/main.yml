@@ -5,10 +5,36 @@
   args:
     executable: /bin/bash
 
+# Some casks (e.g. wireshark-app) need sudo to install/upgrade, which can't
+# prompt in unattended runs. Don't fail the play; print the command to run.
 - name: macOS - Install packages from Brewfile
-  shell: brew bundle --file "{{ dotfiles_dir }}/scripts/Brewfile"
+  shell: |
+    brewfile="{{ dotfiles_dir }}/scripts/Brewfile"
+    if out=$(brew bundle --file "$brewfile" 2>&1); then
+      echo "$out"
+      exit 0
+    fi
+    echo "$out"
+    echo "$out" | sed -nE 's/^(Installing|Upgrading) (.+) has failed!$/\1 \2/p' | while read -r action name; do
+      verb=install; [ "$action" = Upgrading ] && verb=upgrade
+      kind=""; grep -qF "cask \"$name\"" "$brewfile" && kind=" --cask"
+      echo "BREW_FIX: brew $verb$kind $name"
+    done
+    exit 1
   args:
     executable: /bin/bash
+  register: brew_bundle
+  changed_when: "'Installing' in brew_bundle.stdout or 'Upgrading' in brew_bundle.stdout"
+  failed_when: false
+
+- name: macOS - Report Brewfile packages that need manual attention
+  debug:
+    msg: >-
+      Some Brewfile packages failed to install/upgrade (often because they need sudo).
+      Run these in a terminal:
+      {{ ((brew_bundle.stdout_lines | select('match', '^BREW_FIX: ') | map('regex_replace', '^BREW_FIX: ', '') | list)
+         or ['brew bundle --file "' ~ dotfiles_dir ~ '/scripts/Brewfile"']) | join(' && ') }}
+  when: brew_bundle.rc != 0
 
 - name: macOS - Remove Brew packages not in the Brewfile
   shell: brew bundle cleanup --force --file "{{ dotfiles_dir }}/scripts/Brewfile"
