@@ -26,6 +26,7 @@ brew "pkg-config"
 brew "pyenv"
 brew "pipx"
 brew "coder"
+brew "forgejo-cli"
 
 # Casks (GUI Apps)
 cask "ghostty"
