@@ -25,6 +25,7 @@ brew "spice-gtk"
 brew "pkg-config"
 brew "pyenv"
 brew "pipx"
+brew "coder"
 
 # Casks (GUI Apps)
 cask "ghostty"
