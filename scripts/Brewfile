@@ -27,6 +27,7 @@ brew "pyenv"
 brew "pipx"
 brew "coder"
 brew "forgejo-cli"
+brwe "tailscale"
 
 # Casks (GUI Apps)
 cask "ghostty"
