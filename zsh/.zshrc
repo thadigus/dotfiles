@@ -65,7 +65,8 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 
-if command -v tmux &>/dev/null && [ -z "$TMUX" ] && [[ -o interactive ]] && [ "$TERM_PROGRAM" != "vscode" ]; then
+if command -v tmux >/dev/null && [ -z "$TMUX" ] && [[ -o interactive ]] \
+   && [ "$TERM_PROGRAM" != "vscode" ] && [[ -t 0 && -t 1 ]]; then
   exec tmux new-session -A -s main
 fi
 
