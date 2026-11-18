@@ -63,17 +63,13 @@
     path: "{{ user_home }}/Library/LaunchAgents"
     state: directory
 
+# Deliberately not bootout/bootstrap'd here: this playbook normally runs *inside*
+# this agent, and booting it out makes launchd kill the running play. launchd
+# loads ~/Library/LaunchAgents at every login, so plist changes apply next login.
 - name: macOS - Install dotfiles-update LaunchAgent
   template:
     src: dotfiles-update.plist.j2
     dest: "{{ user_home }}/Library/LaunchAgents/com.thadigus.dotfiles-update.plist"
-
-- name: macOS - Load dotfiles-update LaunchAgent
-  shell: |
-    launchctl bootout "gui/$(id -u)/com.thadigus.dotfiles-update" 2>/dev/null || true
-    launchctl bootstrap "gui/$(id -u)" "{{ user_home }}/Library/LaunchAgents/com.thadigus.dotfiles-update.plist"
-  args:
-    executable: /bin/bash
 
 - name: macOS - Install mlx-bridge LaunchAgent
   template:
